@@ -17,6 +17,10 @@ const GAME_TIME_PASSIVE_DECAY_SEC := 120.0
 const WINDOW_REPAIR_RATE := 4.0
 const WINDOW_ATTACK_RATE := 5.0
 const WINDOW_PASSIVE_DECAY_RATE := 8.0
+const ATTACK_DURATION_MIN := 8.0
+const ATTACK_DURATION_MAX := 15.0
+const ATTACK_COOLDOWN_MIN := 6.0
+const ATTACK_COOLDOWN_MAX := 12.0
 
 var phase: int = PHASE_WINDOW
 var san: float = 100.0
@@ -80,7 +84,7 @@ func repair_window(window_id: String, delta: float) -> bool:
 		return false
 	if not _can_interact_in_current_view(window):
 		return false
-	_apply_window_durability_change(window, WINDOW_REPAIR_RATE * delta)
+	_apply_window_durability_change(window_id, window, WINDOW_REPAIR_RATE * delta)
 	window_changed.emit(window_id, window["durability"], window["broken"])
 	if active_attack.get("target_id", "") == window_id:
 		_resolve_attack()
@@ -221,7 +225,7 @@ func chip_window_damage(window_id: String, amount: int) -> bool:
 		return false
 	if not _can_interact_in_current_view(window):
 		return false
-	_apply_window_durability_change(window, -float(amount))
+	_apply_window_durability_change(window_id, window, -float(amount))
 	window_changed.emit(window_id, window["durability"], window["broken"])
 	return true
 
@@ -234,6 +238,13 @@ func get_candle_state(candle_id: String) -> Dictionary:
 	return candles.get(candle_id, {}).duplicate()
 
 
+func get_window_durability_value(window_id: String) -> float:
+	if not windows.has(window_id):
+		return 0.0
+	var window: Dictionary = windows[window_id]
+	return float(window["durability"]) + float(window.get("_durability_frac", 0.0))
+
+
 func get_windows_snapshot() -> Dictionary:
 	var snapshot: Dictionary = {}
 	for window_id in windows.keys():
@@ -242,6 +253,7 @@ func get_windows_snapshot() -> Dictionary:
 			"room": window["room"],
 			"view": window.get("view", window["room"]),
 			"durability": window["durability"],
+			"durability_exact": get_window_durability_value(window_id),
 			"broken": window["broken"],
 		}
 	return snapshot
@@ -261,6 +273,38 @@ func get_candles_snapshot() -> Dictionary:
 
 func set_attacks_enabled(enabled: bool) -> void:
 	attacks_enabled = enabled
+
+
+func skip_attack_cooldown() -> void:
+	next_attack_timer = 0.0
+
+
+func force_window_attack(window_id: String, duration: float = 10.0) -> bool:
+	if is_game_over or not attacks_enabled or phase != PHASE_WINDOW:
+		return false
+	if not windows.has(window_id):
+		return false
+	var window: Dictionary = windows[window_id]
+	if window["broken"]:
+		return false
+	if not active_attack.is_empty():
+		return false
+	active_attack = {"type": "window", "target_id": window_id}
+	attack_timer = maxf(duration, 0.1)
+	attack_started.emit(window_id, "window")
+	return true
+
+
+func is_window_under_attack(window_id: String) -> bool:
+	return (
+		not active_attack.is_empty()
+		and active_attack.get("type") == "window"
+		and active_attack.get("target_id", "") == window_id
+	)
+
+
+func get_active_attack_target() -> String:
+	return active_attack.get("target_id", "")
 
 
 func reset_game() -> void:
@@ -295,6 +339,9 @@ func get_snapshot() -> Dictionary:
 		"current_room_id": current_room_id,
 		"current_view_id": current_view_id,
 		"game_time": game_time,
+		"attacks_enabled": attacks_enabled,
+		"attack_timer": attack_timer,
+		"next_attack_timer": next_attack_timer,
 		"unlit_candle_count": count_unlit_candles(),
 		"active_attack": active_attack.duplicate(),
 		"is_game_over": is_game_over,
@@ -333,7 +380,7 @@ func _update_window_passive_decay(delta: float) -> void:
 		if window["broken"]:
 			continue
 		var before: int = window["durability"]
-		_apply_window_durability_change(window, -WINDOW_PASSIVE_DECAY_RATE * delta)
+		_apply_window_durability_change(window_id, window, -WINDOW_PASSIVE_DECAY_RATE * delta)
 		if window["durability"] != before or window["broken"]:
 			window_changed.emit(window_id, window["durability"], window["broken"])
 
@@ -367,7 +414,7 @@ func _start_random_attack() -> void:
 			return
 		var target_id: String = ids[randi() % ids.size()]
 		active_attack = {"type": "window", "target_id": target_id}
-		attack_timer = randf_range(8.0, 15.0)
+		attack_timer = randf_range(ATTACK_DURATION_MIN, ATTACK_DURATION_MAX)
 		attack_started.emit(target_id, "window")
 	else:
 		var lit_ids: Array[String] = []
@@ -387,7 +434,7 @@ func _damage_window(window_id: String, delta: float) -> void:
 	var window: Dictionary = windows[window_id]
 	if window["broken"]:
 		return
-	_apply_window_durability_change(window, -WINDOW_ATTACK_RATE * delta)
+	_apply_window_durability_change(window_id, window, -WINDOW_ATTACK_RATE * delta)
 	window_changed.emit(window_id, window["durability"], window["broken"])
 
 
@@ -404,10 +451,11 @@ func _extinguish_candle(candle_id: String) -> void:
 	candle_changed.emit(candle_id, false)
 
 
-func _apply_window_durability_change(window: Dictionary, delta: float) -> void:
+func _apply_window_durability_change(window_id: String, window: Dictionary, delta: float) -> void:
 	if window["broken"]:
 		return
-	var total := float(window["durability"]) + window.get("_durability_frac", 0.0) + delta
+	var was_broken := false
+	var total: float = float(window["durability"]) + float(window.get("_durability_frac", 0.0)) + delta
 	total = clampf(total, 0.0, float(WINDOW_DURABILITY_MAX))
 	window["durability"] = int(total)
 	window["_durability_frac"] = total - float(window["durability"])
@@ -415,7 +463,10 @@ func _apply_window_durability_change(window: Dictionary, delta: float) -> void:
 		window["durability"] = 0
 		window["_durability_frac"] = 0.0
 		window["broken"] = true
+		was_broken = true
 		_enter_phase_2()
+	if was_broken and is_window_under_attack(window_id):
+		_resolve_attack()
 
 
 func break_window(window_id: String) -> bool:
@@ -429,6 +480,8 @@ func break_window(window_id: String) -> bool:
 	window["broken"] = true
 	window_changed.emit(window_id, 0, true)
 	_enter_phase_2()
+	if is_window_under_attack(window_id):
+		_resolve_attack()
 	return true
 
 
@@ -436,7 +489,7 @@ func _resolve_attack() -> void:
 	if not active_attack.is_empty():
 		attack_resolved.emit(active_attack["target_id"], active_attack["type"])
 	active_attack = {}
-	next_attack_timer = randf_range(6.0, 12.0)
+	next_attack_timer = randf_range(ATTACK_COOLDOWN_MIN, ATTACK_COOLDOWN_MAX)
 
 
 func _enter_phase_2() -> void:
