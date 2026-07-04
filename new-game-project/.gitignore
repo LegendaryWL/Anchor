@@ -1,3 +1,5 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+new-game-project/.gdignore
+web_build/.gdignore

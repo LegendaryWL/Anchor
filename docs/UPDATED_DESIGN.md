@@ -53,7 +53,7 @@
 
 ### 加分项
 
-- 相机小角度旋转。
+- 相机小角度旋转。 20度
 - 黑屏转场。
 - 窗外红光。
 - 低语、破窗、蜡烛熄灭音效。
@@ -187,9 +187,9 @@ export_presets.cfg
 ### 5.1 实体 ID
 
 ```text
-room_a
-room_b
-bow_room
+room_a 船长室
+room_b 休息室
+bow_room 走廊
 
 window_room_a_0
 window_room_a_1

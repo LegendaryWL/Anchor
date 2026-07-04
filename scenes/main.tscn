@@ -1,0 +1,294 @@
+[gd_scene format=4 uid="uid://d0nhcl8fio4vp"]
+
+[ext_resource type="Script" uid="uid://bqyytf6c40m8n" path="res://scenes/camera_switcher.gd" id="1_sugp2"]
+[ext_resource type="PackedScene" uid="uid://2vsgjc6oml88" path="res://assets/models/蜡烛、窗户和木板白模.fbx" id="2_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://s7xlc7mhh5tw" path="res://assets/models/map_blockout/jiashishi.fbx" id="3_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://j4np2h0kxscl" path="res://assets/models/map_blockout/zoulang.fbx" id="4_tefeu"]
+[ext_resource type="PackedScene" uid="uid://br6ptytcc3pex" path="res://assets/models/map_blockout/xiuxishi.fbx" id="5_o6xl0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5epwh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+albedo_color = Color(0.53333336, 0.26666668, 0.26666668, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_b1yhx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_6yptn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_q2trj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sn4ia"]
+resource_name = "computer.001"
+vertex_color_use_as_albedo = true
+emission_enabled = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_4mr3h"]
+_surfaces = [{
+"aabb": AABB(-0.00011605263, -0.00025527715, -0.00013402491, 0.00023214341, 0.00077186694, 0.00026805),
+"format": 34359742465,
+"index_count": 60,
+"index_data": PackedByteArray("AAABAAIAAQAAAAMAAwAEAAEAAgABAAQABQADAAAABAADAAUAAgAGAAAABQAAAAYABwAGAAIABQAGAAcAAgAIAAcABAAIAAIABQAHAAkACQAHAAgABQAKAAQACAAEAAoABQAJAAsACAALAAkACwAKAAUACgALAAgA"),
+"name": "computer.001",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 12,
+"vertex_data": PackedByteArray("w3XzOLjWhblSioy4w3XzOMFrBzpPioy4CtejMsFrBzoJiQy5w3XzOLjWhblxiow4w3XzOMFrBzpziow4CtejMrjWhbkUiQw5CtejMrjWhbkKiQy5SGHzuLjWhblSioy4SGHzuMFrBzpPioy4SGHzuLjWhblxiow4CtejMsFrBzoWiQw5SGHzuMFrBzpziow4")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_wjp2o"]
+resource_name = "柱体_006"
+_surfaces = [{
+"aabb": AABB(-0.00011605263, -0.00025527715, -0.00013402491, 0.00023214341, 0.00077186694, 0.00026805),
+"attribute_data": PackedByteArray("W7PFPlr0lj5bs8U+hESKPgPuyT6ERIo+A+7JPlr0lj6zeME+WvSWPrN4wT6ERIo+W7PFPoREij5bs8U+WvSWPi0+vT5a9JY+LT69PoREij6zeME+hESKPrN4wT5a9JY+hgO5PoREij4tPr0+hESKPi0+vT5a9JY+hgO5Plr0lj4y5rY+LGOjPiegsT6wV6A+J6CxPrhAmj5eLLw+sFegPjLmtj48NZc+Xiy8PrhAmj7eyLQ+hESKPoYDuT6ERIo+hgO5Plr0lj7eyLQ+WvSWPjeOsD6ERIo+3si0PoREij7eyLQ+WvSWPjeOsD5a9JY+B5bDPixjoz4HlsM+PDWXPv1Pvj64QJo+/U++PrBXoD4z3Mg+uECaPjPcyD6wV6A+"),
+"format": 34359742487,
+"index_count": 60,
+"index_data": PackedByteArray("AAABAAIAAgADAAAABAAFAAYABgAHAAQACAAJAAoACgALAAgADAANAA4ADgAPAAwAEAARABIAEgATABAAEwASABQAFAAVABMAFgAXABgAGAAZABYAGgAbABwAHAAdABoAHgAfACAAHgAgACEAHgAiAB8AHgAjACIA"),
+"material": SubResource("StandardMaterial3D_sn4ia"),
+"name": "computer.001",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 36,
+"vertex_data": PackedByteArray("w3XzOLjWhblSioy4w3XzOMFrBzpPioy4CtejMsFrBzoJiQy5CtejMrjWhbkKiQy5w3XzOLjWhblxiow4w3XzOMFrBzpziow4w3XzOMFrBzpPioy4w3XzOLjWhblSioy4CtejMrjWhbkUiQw5CtejMsFrBzoWiQw5w3XzOMFrBzpziow4w3XzOLjWhblxiow4SGHzuMFrBzpziow4CtejMsFrBzoWiQw5CtejMrjWhbkUiQw5SGHzuLjWhblxiow4CtejMsFrBzoWiQw5SGHzuMFrBzpziow4SGHzuMFrBzpPioy4w3XzOMFrBzpziow4CtejMsFrBzoJiQy5w3XzOMFrBzpPioy4SGHzuMFrBzpPioy4SGHzuMFrBzpziow4SGHzuLjWhblxiow4SGHzuLjWhblSioy4CtejMsFrBzoJiQy5SGHzuMFrBzpPioy4SGHzuLjWhblSioy4CtejMrjWhbkKiQy5CtejMrjWhbkUiQw5CtejMrjWhbkKiQy5SGHzuLjWhblSioy4SGHzuLjWhblxiow4w3XzOLjWhblSioy4w3XzOLjWhblxiow4//8l0QAAa9f//yXRAABr1///JdEAAGvX//8l0QAAa9f///9//////////3//////////f/////////9//////9iu/3///2vX2K7/f///a9fYrv9///9r19iu/3///2vXJlH/fyXR/78mUf9/JdH/vyZR/38l0f+/JlH/fyXR/7//f////v//v/9///////+//3////7//7//f////v//v/9////+//+//3///////78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAAJdHZLv+/AAAl0dku/78AACXR2S7/vwAAJdHZLv+//38AAP///z//fwAA////P/9/AAD+//8//38AAP///z//fwAA////P/9/AAD9//8/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_4mr3h")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fqd3c"]
+resource_name = "lazhu"
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.81001925, 0.5747135, 0.47580725, 1)
+emission_enabled = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_16h7b"]
+_surfaces = [{
+"aabb": AABB(-5.9461592e-05, -9.622574e-05, -6.8690926e-05, 0.0001189804, 0.00023000003, 0.00013738006),
+"format": 34359742465,
+"index_count": 180,
+"index_data": PackedByteArray("AAARABIAEgABAAAAAAABAAIABwACAAEAAgADAAAAAQAKAAcACgABABIAAgAHAAUAAwACAAUACQAHAAoABwAJAAUABgADAAUABAAAAAMAAwAGAAQAEQAAAAQACAAGAAUACQAIAAUABAAGAAgADAAIAAkACAAMAAQACQANAAwACgANAAkABAAMABMABAAUABEAEwAUAAQAEQAUABUAFQAUABMADQAKABYADAANABcAFwATAAwAFgAXAA0AEwAXAA4ADgAXABYAEgAWAAoADgAQABMAEwAQABUAFgAYAA4AGAAWABIAEAAOABkADgAYAAsACwAZAA4AEgAaABgACwAYABoAGwAaABIAEgARABsAFQAbABEAHAAaABsAGgAcAAsAHQAbABUAGwAdABwAFQAeAB0AHAAPAAsAHQAPABwAHgAPAB0ACwAPABkAHwAeABUAHwAPAB4AGQAPAB8AFQAQAB8AGQAfABAA"),
+"lods": [5.9217982e-05, PackedByteArray("AAABAAIAAgADAAAABAAAAAMAAwACAAUAAwAGAAQABgADAAUAAgAHAAUABwACAAEACAAGAAUABAAGAAgABwAJAAUACQAIAAUAAQAKAAcACQAHAAoACwAKAAEADAAIAAkACAAMAAQACgANAAkACQANAAwACgALAA4ADgANAAoAAQAPAAsACwAPAA4AAQAAAA8ABAAPAAAADQAQAAwABAAMABAAEAANAA4AEAAPAAQADgAPABAA")],
+"name": "lazhu",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 32,
+"vertex_data": PackedByteArray("cT12OI8CSLhcGw64j8L1Mo8CSLg9II64j8L1Mh8ln7gpEGC49ihCOB8ln7hIEeC3cT12OI8CSLhxGQ44j8L1Ms3MybiPwnWw9ihCOB8ln7hxDeA3hetBuB8ln7hIEeC3j8L1Mh8ln7hSDmA4hetBuB8ln7hxDeA3PQp2uI8CSLhcGw64MzMauHvUtThmLrK3j8L1Mo8CSLhIH444PQp2uI8CSLhxGQ44AABguOE6GDgAZAE4j8L1MsNFDDmPwnWwj8L1MuE6GDh7ZIE416N5OM3MvrZICRC4j8L1Ms3MvrYpDpC4j8L1Ms3MvrYzDZA416N5OM3MvrYUEhA4MzNgOOE6GDgAZAE4ZmZ5uM3MvrZICRC4ZmZ5uM3MvrYUEhA4AABguOE6GDjsZQG4MzMauHvUtTi4KrI3j8L1MuE6GDgAYIG4MzNgOOE6GDjsZQG4j8L1MnvUtTgpODK4pHAaOHvUtThmLrK3pHAaOHvUtTi4KrI3j8L1MnvUtThSNjI4")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_enc74"]
+resource_name = "球体_001"
+_surfaces = [{
+"aabb": AABB(-5.9461592e-05, -9.622574e-05, -6.8690926e-05, 0.0001189804, 0.00023000003, 0.00013738006),
+"attribute_data": PackedByteArray("8MIiP6RPaz+TciM/pE9rP5NyIz9I/2s/8MIiP0j/az+TciM/pE9rP/DCIj+kT2s/wRojPzqRaD/wwiI/SP9rP5NyIz9I/2s/wRojP9qubD9eEyI/pE9rP/DCIj+kT2s/8MIiP0j/az9eEyI/SP9rP14TIj+kT2s/L2siPzqRaD/wwiI/pE9rP14TIj9I/2s/8MIiP0j/az8vayI/2q5sP7tjIT9I/2s/u2MhP6RPaz9eEyI/pE9rP14TIj9I/2s/u2MhP0j/az9eEyI/SP9rP4y7IT/armw/XhMiP6RPaz+7YyE/pE9rP7tjIT9v8Gk/jLshPzqRaD8ptCA/SP9rPym0ID+kT2s/u2MhP6RPaz+7YyE/SP9rP7tjIT9v8Gk/KbQgP6RPaz8ptCA/b/BpP7tjIT+kT2s/6QshPzqRaD8ptCA/SP9rP7tjIT9I/2s/6QshP9qubD8lIiQ/pE9rPyUiJD/dQGk/yNEkP2/waT/2eSQ/OpFoP8jRJD+kT2s/JSIkP0j/az/I0SQ/SP9rP/Z5JD/armw/JSIkP6RPaz/I0SQ/pE9rP8jRJD9I/2s/JSIkP0j/az+TciM/SP9rPyUiJD9I/2s/ZMojP9qubD+TciM/pE9rP2TKIz86kWg/JSIkP91AaT8lIiQ/pE9rP5NyIz+kT2s/JSIkP6RPaz8lIiQ/SP9rP5NyIz9I/2s/8MIiPxKgaj+TciM/EqBqP/DCIj9v8Gk/8MIiP91AaT+TciM/3UBpP5NyIz9v8Gk/8MIiP2/waT+TciM/b/BpP5NyIz8SoGo/8MIiPxKgaj/wwiI/3UBpP5NyIz/dQGk/XhMiP2/waT/wwiI/b/BpP/DCIj8SoGo/XhMiPxKgaj9eEyI/3UBpP/DCIj/dQGk/XhMiPxKgaj/wwiI/EqBqP14TIj9v8Gk/XhMiP91AaT/wwiI/3UBpP/DCIj9v8Gk/u2MhPxKgaj9eEyI/b/BpP14TIj8SoGo/u2MhP91AaT9eEyI/3UBpP7tjIT8SoGo/XhMiPxKgaj+7YyE/3UBpP14TIj/dQGk/XhMiP2/waT+7YyE/b/BpP7tjIT8SoGo/KbQgPxKgaj8ptCA/3UBpP7tjIT/dQGk/KbQgPxKgaj+7YyE/EqBqPym0ID/dQGk/u2MhP91AaT+7YyE/b/BpPym0ID9v8Gk/JSIkPxKgaj8lIiQ/b/BpP8jRJD8SoGo/yNEkP91AaT8lIiQ/EqBqP8jRJD8SoGo/JSIkP91AaT/I0SQ/3UBpP8jRJD9v8Gk/JSIkP2/waT+TciM/3UBpP5NyIz8SoGo/JSIkPxKgaj+TciM/b/BpP5NyIz/dQGk/JSIkP91AaT8lIiQ/b/BpP5NyIz8SoGo/k3IjP2/waT8lIiQ/b/BpPyUiJD8SoGo/"),
+"format": 34359742487,
+"index_count": 180,
+"index_data": PackedByteArray("BQBCAEMAQwAEAAUARABFAEYARgBHAEQAAAABAAIAAgADAAAASABJAEoASgBLAEgATAAGAE0ABwAIAAkACgALAAwADAANAAoATgBPAFAAUABRAE4AUgAPAFMAEQASABMADgBUAFUAVQAQAA4AVgBXAFgAWABZAFYAFAAVABYAFgAXABQAWgAdAFsAWwBcAFoAXQAeAF4AGAAZABoAXwBgABsAGwAcAF8AYQBiAGMAYwBkAGEAHwAgACEAIQAiAB8AJQAjAGUAZQBmACUAZwAnAGgAKAApACoAaQBqACYAJgAkAGkAawBsAG0AbQBuAGsAbwBwAC0ALQBxAG8ALAAuAHIAMAAxADIAcwB0AC8ALwArAHMAdQB2AHcAdwB4AHUAMwA0ADUANQA2ADMAeQA7ADwANwA4ADkAegB7AD0APQA6AHoAfAB9AH4AfgB/AHwAPgA/AEAAQABBAD4AgACBAIIAggCDAIAA"),
+"lods": [5.9217982e-05, PackedByteArray("AAABAAIAAgADAAAABAAFAAYABwAIAAkACgALAAwADAANAAoADgAPABAAEQASABMAFAAVABYAFgAXABQAGAAZABoAGwAcAB0AHQAeABsAHwAgACEAIQAiAB8AIwAkACUAJAAjACYAJQAnACMAKAApACoAKwAsAC0ALAAuAC0ALQAvACsAMAAxADIAMwA0ADUANQA2ADMANwA4ADkAOgA7ADwAPAA9ADoAPgA/AEAAQABBAD4A")],
+"material": SubResource("StandardMaterial3D_fqd3c"),
+"name": "lazhu",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 132,
+"vertex_data": PackedByteArray("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")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_16h7b")
+
+[sub_resource type="BoxMesh" id="BoxMesh_g3eud"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
+albedo_color = Color(0.26666668, 0.26666668, 0.53333336, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xupts"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
+albedo_color = Color(0.26666668, 0.53333336, 0.26666668, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_djjsb"]
+
+[node name="Main" type="Node3D" unique_id=817702388]
+script = ExtResource("1_sugp2")
+
+[node name="World" type="Node3D" parent="." unique_id=181750281]
+
+[node name="Environments" type="Node3D" parent="World" unique_id=1229302700]
+
+[node name="蜡烛、窗户和木板白模" parent="World/Environments" unique_id=208864751 instance=ExtResource("2_jyhfs")]
+visible = false
+
+[node name="立方体_007" parent="World/Environments/蜡烛、窗户和木板白模" index="8" unique_id=1094159232]
+visible = false
+
+[node name="立方体_067" parent="World/Environments/蜡烛、窗户和木板白模" index="9" unique_id=107662944]
+visible = false
+
+[node name="立方体_068" parent="World/Environments/蜡烛、窗户和木板白模" index="10" unique_id=303865264]
+visible = false
+
+[node name="立方体_069" parent="World/Environments/蜡烛、窗户和木板白模" index="11" unique_id=1311423183]
+visible = false
+
+[node name="立方体_071" parent="World/Environments/蜡烛、窗户和木板白模" index="12" unique_id=431915897]
+visible = false
+
+[node name="立方体_072" parent="World/Environments/蜡烛、窗户和木板白模" index="13" unique_id=238368301]
+visible = false
+
+[node name="jiashishi" parent="World/Environments" unique_id=1885763698 instance=ExtResource("3_tbgi4")]
+transform = Transform3D(-100, 0, 8.742278e-06, 0, 100, 0, -8.742278e-06, 0, -100, 26.98, 0, 12.54)
+
+[node name="zoulang" parent="World/Environments" unique_id=1652394118 instance=ExtResource("4_tefeu")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 11, 0, -1)
+
+[node name="xiuxishi" parent="World/Environments" unique_id=636572259 instance=ExtResource("5_o6xl0")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4.455, -0.125, -14.445)
+
+[node name="Rooms" type="Node3D" parent="World" unique_id=84225231]
+visible = false
+
+[node name="RoomA" type="Node3D" parent="World/Rooms" unique_id=2144562685]
+visible = false
+
+[node name="Floor" type="MeshInstance3D" parent="World/Rooms/RoomA" unique_id=1486819002]
+transform = Transform3D(4, 0, 0, 0, 0.1, 0, 0, 0, 4, -5, 0, 0)
+mesh = SubResource("BoxMesh_5epwh")
+surface_material_override/0 = SubResource("StandardMaterial3D_0xm2m")
+
+[node name="BackWall" type="MeshInstance3D" parent="World/Rooms/RoomA" unique_id=1141470655]
+transform = Transform3D(4, 0, 0, 0, 3, 0, 0, 0, 0.1, -5, 1.5, -2)
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="LeftWall" type="MeshInstance3D" parent="World/Rooms/RoomA" unique_id=1627637305]
+transform = Transform3D(0.1, 0, 0, 0, 3, 0, 0, 0, 4, -7, 1.5, 0)
+visible = false
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="RightWall" type="MeshInstance3D" parent="World/Rooms/RoomA" unique_id=450409892]
+transform = Transform3D(0.1, 0, 0, 0, 3, 0, 0, 0, 4, -3, 1.5, 0)
+visible = false
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="Windows" type="Node3D" parent="World/Rooms/RoomA" unique_id=708573164]
+
+[node name="window_room_a_0" type="MeshInstance3D" parent="World/Rooms/RoomA/Windows" unique_id=706230472]
+transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, -6.2, 1.5, -1.9)
+mesh = SubResource("BoxMesh_6yptn")
+
+[node name="window_room_a_1" type="MeshInstance3D" parent="World/Rooms/RoomA/Windows" unique_id=195269714]
+transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, -3.8, 1.5, -1.9)
+mesh = SubResource("BoxMesh_q2trj")
+
+[node name="Candles" type="Node3D" parent="World/Rooms/RoomA" unique_id=1499076479]
+
+[node name="candle_room_a_0" type="Node3D" parent="World/Rooms/RoomA/Candles" unique_id=1913563444]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.4, 1)
+
+[node name="柱体_006" type="MeshInstance3D" parent="World/Rooms/RoomA/Candles/candle_room_a_0" unique_id=1939601799]
+transform = Transform3D(300, 0, 0, 0, 300, 0.0001509958, 0, -0.0001509958, 300, 0.36658478, -0.003, 0.5419824)
+mesh = SubResource("ArrayMesh_wjp2o")
+
+[node name="球体_001" type="MeshInstance3D" parent="World/Rooms/RoomA/Candles/candle_room_a_0" unique_id=990755801]
+transform = Transform3D(300, 0, 0, 0, 300, 0.00015099581, 0, -0.00015099581, 300, 0.368, 0.175, 0.542)
+mesh = SubResource("ArrayMesh_enc74")
+
+[node name="candle_room_a_1" type="MeshInstance3D" parent="World/Rooms/RoomA/Candles" unique_id=190014436]
+transform = Transform3D(0.15, 0, 0, 0, 0.4, 0, 0, 0, 0.15, -4, 0.4, 1)
+mesh = SubResource("BoxMesh_q2trj")
+
+[node name="RoomB" type="Node3D" parent="World/Rooms" unique_id=1385027588]
+visible = false
+
+[node name="Floor" type="MeshInstance3D" parent="World/Rooms/RoomB" unique_id=767888303]
+transform = Transform3D(4, 0, 0, 0, 0.1, 0, 0, 0, 4, 5, 0, 0)
+visible = false
+mesh = SubResource("BoxMesh_g3eud")
+surface_material_override/0 = SubResource("StandardMaterial3D_1bvp3")
+
+[node name="BackWall" type="MeshInstance3D" parent="World/Rooms/RoomB" unique_id=499082776]
+transform = Transform3D(4, 0, 0, 0, 3, 0, 0, 0, 0.1, 5, 1.5, -2)
+visible = false
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="LeftWall" type="MeshInstance3D" parent="World/Rooms/RoomB" unique_id=137700408]
+transform = Transform3D(0.1, 0, 0, 0, 3, 0, 0, 0, 4, 3, 1.5, 0)
+visible = false
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="RightWall" type="MeshInstance3D" parent="World/Rooms/RoomB" unique_id=667583768]
+transform = Transform3D(0.1, 0, 0, 0, 3, 0, 0, 0, 4, 7, 1.5, 0)
+visible = false
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="Windows" type="Node3D" parent="World/Rooms/RoomB" unique_id=2105821683]
+
+[node name="window_room_b_0" type="MeshInstance3D" parent="World/Rooms/RoomB/Windows" unique_id=39330985]
+transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, 3.8, 1.5, -1.9)
+mesh = SubResource("BoxMesh_6yptn")
+
+[node name="window_room_b_1" type="MeshInstance3D" parent="World/Rooms/RoomB/Windows" unique_id=290179682]
+transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, 6.2, 1.5, -1.9)
+mesh = SubResource("BoxMesh_q2trj")
+
+[node name="Candles" type="Node3D" parent="World/Rooms/RoomB" unique_id=979562258]
+
+[node name="candle_room_b_0" type="MeshInstance3D" parent="World/Rooms/RoomB/Candles" unique_id=1635881369]
+transform = Transform3D(0.15, 0, 0, 0, 0.4, 0, 0, 0, 0.15, 4, 0.4, 1)
+mesh = SubResource("BoxMesh_6yptn")
+
+[node name="candle_room_b_1" type="MeshInstance3D" parent="World/Rooms/RoomB/Candles" unique_id=653641828]
+transform = Transform3D(0.15, 0, 0, 0, 0.4, 0, 0, 0, 0.15, 6, 0.4, 1)
+mesh = SubResource("BoxMesh_q2trj")
+
+[node name="BowRoom" type="Node3D" parent="World/Rooms" unique_id=1228287358]
+visible = false
+
+[node name="Floor" type="MeshInstance3D" parent="World/Rooms/BowRoom" unique_id=1390256777]
+transform = Transform3D(4, 0, 0, 0, 0.1, 0, 0, 0, 4, 0, 0, -6)
+visible = false
+mesh = SubResource("BoxMesh_xupts")
+surface_material_override/0 = SubResource("StandardMaterial3D_h2yge")
+
+[node name="BackWall" type="MeshInstance3D" parent="World/Rooms/BowRoom" unique_id=354310209]
+transform = Transform3D(4, 0, 0, 0, 3, 0, 0, 0, 0.1, 0, 1.5, -8)
+visible = false
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="LeftWall" type="MeshInstance3D" parent="World/Rooms/BowRoom" unique_id=139210251]
+transform = Transform3D(0.1, 0, 0, 0, 3, 0, 0, 0, 4, -2, 1.5, -6)
+visible = false
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="RightWall" type="MeshInstance3D" parent="World/Rooms/BowRoom" unique_id=793089838]
+transform = Transform3D(0.1, 0, 0, 0, 3, 0, 0, 0, 4, 2, 1.5, -6)
+visible = false
+mesh = SubResource("BoxMesh_b1yhx")
+
+[node name="anchor_device" type="MeshInstance3D" parent="World/Rooms/BowRoom" unique_id=56991541]
+transform = Transform3D(0.8, 0, 0, 0, 0.6, 0, 0, 0, 0.8, 0, 0.6, -6)
+mesh = SubResource("BoxMesh_djjsb")
+
+[node name="Lighting" type="Node3D" parent="." unique_id=237872262]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting" unique_id=1001014927]
+transform = Transform3D(0.8660254, -0.35355338, 0.35355338, 0, 0.70710677, 0.70710677, -0.5, -0.6123724, 0.6123724, 0, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Lighting" unique_id=208932551]
+visible = false
+
+[node name="Cameras" type="Node3D" parent="." unique_id=465472595]
+
+[node name="camera_room_a" type="Camera3D" parent="Cameras" unique_id=1970832559]
+transform = Transform3D(0.70710677, -0.08249867, 0.7022777, 0, 0.9931707, 0.116670735, -0.70710677, -0.08249867, 0.7022777, 5, 5, -4)
+fov = 35.0
+
+[node name="camera_room_b" type="Camera3D" parent="Cameras" unique_id=1296167417]
+transform = Transform3D(-0.6678325, -0.08683938, 0.7392284, 0, 0.9931707, 0.116670735, -0.7443116, 0.07791651, -0.66327167, 35, 5, 3)
+fov = 35.0
+
+[node name="camera_bow" type="Camera3D" parent="Cameras" unique_id=1217198968]
+transform = Transform3D(0.99619466, 0, 0.08715573, 0, 1, 0, -0.08715573, 0, 0.99619466, 11, 5, 18)
+fov = 35.0
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1482041362]
+
+[editable path="World/Environments/蜡烛、窗户和木板白模"]
