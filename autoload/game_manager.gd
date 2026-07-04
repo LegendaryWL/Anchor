@@ -8,6 +8,7 @@ signal phase_changed(phase: int)
 signal room_changed(room_id: String)
 signal attack_started(target_id: String, attack_type: String)
 signal attack_resolved(target_id: String, attack_type: String)
+signal black_hand_expel_changed(target_id: String, progress: int, required: int)
 signal game_over(result: String)
 
 const PHASE_WINDOW := 1
@@ -21,6 +22,9 @@ const ATTACK_DURATION_MIN := 8.0
 const ATTACK_DURATION_MAX := 15.0
 const ATTACK_COOLDOWN_MIN := 6.0
 const ATTACK_COOLDOWN_MAX := 12.0
+const CANDLE_ATTACK_DURATION := 15.0
+const BLACK_HAND_EXPEL_MIN := 5
+const BLACK_HAND_EXPEL_MAX := 8
 
 var phase: int = PHASE_WINDOW
 var san: float = 100.0
@@ -101,8 +105,6 @@ func light_candle(candle_id: String) -> bool:
 		return false
 	candle["lit"] = true
 	candle_changed.emit(candle_id, true)
-	if active_attack.get("target_id", "") == candle_id:
-		_resolve_attack()
 	return true
 
 
@@ -125,10 +127,28 @@ func expel_black_hand(candle_id: String) -> bool:
 		return false
 	if not _can_interact_in_current_view(candles[candle_id]):
 		return false
-	if active_attack.get("target_id", "") == candle_id:
+	if (
+		active_attack.is_empty()
+		or active_attack.get("type") != "candle"
+		or active_attack.get("target_id", "") != candle_id
+	):
+		return false
+	var progress: int = int(active_attack.get("expel_progress", 0)) + 1
+	var required: int = int(active_attack.get("expel_required", BLACK_HAND_EXPEL_MIN))
+	active_attack["expel_progress"] = progress
+	black_hand_expel_changed.emit(candle_id, progress, required)
+	if progress >= required:
 		_resolve_attack()
-		return true
-	return false
+	return true
+
+
+func can_expel_black_hand(candle_id: String) -> bool:
+	if is_game_over or not candles.has(candle_id):
+		return false
+	return (
+		_can_interact_in_current_view(candles[candle_id])
+		and is_candle_under_attack(candle_id)
+	)
 
 
 func switch_room(view_id: String) -> void:
@@ -303,6 +323,57 @@ func is_window_under_attack(window_id: String) -> bool:
 	)
 
 
+func force_candle_attack(
+	candle_id: String,
+	duration: float = CANDLE_ATTACK_DURATION,
+	expel_required: int = -1,
+) -> bool:
+	if is_game_over or not attacks_enabled or phase != PHASE_CANDLE:
+		return false
+	if not candles.has(candle_id):
+		return false
+	if not candles[candle_id]["lit"]:
+		return false
+	if not active_attack.is_empty():
+		return false
+	_begin_candle_attack(candle_id, maxf(duration, 0.1), expel_required)
+	return true
+
+
+func is_candle_under_attack(candle_id: String) -> bool:
+	return (
+		not active_attack.is_empty()
+		and active_attack.get("type") == "candle"
+		and active_attack.get("target_id", "") == candle_id
+	)
+
+
+func get_candle_under_attack_in_view() -> String:
+	if active_attack.get("type") != "candle":
+		return ""
+	var candle_id: String = active_attack.get("target_id", "")
+	if not candles.has(candle_id):
+		return ""
+	if not _can_interact_in_current_view(candles[candle_id]):
+		return ""
+	return candle_id
+
+
+func get_black_hand_expel_state() -> Dictionary:
+	if active_attack.get("type") != "candle":
+		return {}
+	return {
+		"target_id": active_attack.get("target_id", ""),
+		"expel_progress": int(active_attack.get("expel_progress", 0)),
+		"expel_required": int(active_attack.get("expel_required", 0)),
+		"time_left": attack_timer,
+	}
+
+
+func enter_phase_2_for_test() -> void:
+	_enter_phase_2()
+
+
 func get_active_attack_target() -> String:
 	return active_attack.get("target_id", "")
 
@@ -344,6 +415,7 @@ func get_snapshot() -> Dictionary:
 		"next_attack_timer": next_attack_timer,
 		"unlit_candle_count": count_unlit_candles(),
 		"active_attack": active_attack.duplicate(),
+		"black_hand": get_black_hand_expel_state(),
 		"is_game_over": is_game_over,
 		"windows": get_windows_snapshot(),
 		"candles": get_candles_snapshot(),
@@ -425,9 +497,22 @@ func _start_random_attack() -> void:
 			next_attack_timer = 4.0
 			return
 		var target_id: String = lit_ids[randi() % lit_ids.size()]
-		active_attack = {"type": "candle", "target_id": target_id}
-		attack_timer = 15.0
-		attack_started.emit(target_id, "candle")
+		_begin_candle_attack(target_id, CANDLE_ATTACK_DURATION)
+
+
+func _begin_candle_attack(target_id: String, duration: float, expel_required: int = -1) -> void:
+	var required: int = expel_required
+	if required < 0:
+		required = randi_range(BLACK_HAND_EXPEL_MIN, BLACK_HAND_EXPEL_MAX)
+	active_attack = {
+		"type": "candle",
+		"target_id": target_id,
+		"expel_required": required,
+		"expel_progress": 0,
+	}
+	attack_timer = duration
+	attack_started.emit(target_id, "candle")
+	black_hand_expel_changed.emit(target_id, 0, required)
 
 
 func _damage_window(window_id: String, delta: float) -> void:
