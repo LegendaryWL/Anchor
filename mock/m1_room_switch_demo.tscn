@@ -1,0 +1,162 @@
+[gd_scene load_steps=11 format=3 uid="uid://m1roomswitchdemo"]
+
+[ext_resource type="Script" path="res://mock/m1_room_switch_driver.gd" id="1_driver"]
+[ext_resource type="Script" path="res://interaction/room_switcher.gd" id="2_switcher"]
+[ext_resource type="Script" path="res://ui/minimap.gd" id="3_minimap"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_room_a"]
+albedo_color = Color(0.12, 0.32, 0.85, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_room_b"]
+albedo_color = Color(0.08, 0.55, 0.34, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bow"]
+albedo_color = Color(0.76, 0.22, 0.16, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.16, 0.16, 0.18, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+size = Vector3(5, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(5, 0.12, 5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_marker"]
+size = Vector3(0.7, 0.7, 0.7)
+
+[node name="M1RoomSwitchDemo" type="Node"]
+script = ExtResource("1_driver")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 4)
+light_energy = 2.0
+
+[node name="RoomA" type="Node3D" parent="."]
+
+[node name="BackWall" type="MeshInstance3D" parent="RoomA"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_room_a")
+
+[node name="Floor" type="MeshInstance3D" parent="RoomA"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 2.2)
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="Marker" type="MeshInstance3D" parent="RoomA"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1.15, 2.2)
+mesh = SubResource("BoxMesh_marker")
+surface_material_override/0 = SubResource("StandardMaterial3D_room_a")
+
+[node name="Label3D" type="Label3D" parent="RoomA"]
+transform = Transform3D(0.012, 0, 0, 0, 0.012, 0, 0, 0, 0.012, 0, 2.3, 0.15)
+text = "ROOM A"
+font_size = 64
+modulate = Color(1, 1, 1, 1)
+
+[node name="Camera3D" type="Camera3D" parent="RoomA"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 1.45, 6)
+current = true
+
+[node name="RoomB" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+
+[node name="BackWall" type="MeshInstance3D" parent="RoomB"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_room_b")
+
+[node name="Floor" type="MeshInstance3D" parent="RoomB"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 2.2)
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="Marker" type="MeshInstance3D" parent="RoomB"]
+transform = Transform3D(0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866025, 0, 1.15, 2.2)
+mesh = SubResource("BoxMesh_marker")
+surface_material_override/0 = SubResource("StandardMaterial3D_room_b")
+
+[node name="Label3D" type="Label3D" parent="RoomB"]
+transform = Transform3D(0.012, 0, 0, 0, 0.012, 0, 0, 0, 0.012, 0, 2.3, 0.15)
+text = "ROOM B"
+font_size = 64
+modulate = Color(1, 1, 1, 1)
+
+[node name="Camera3D" type="Camera3D" parent="RoomB"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 1.45, 6)
+
+[node name="RoomBow" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
+
+[node name="BackWall" type="MeshInstance3D" parent="RoomBow"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_bow")
+
+[node name="Floor" type="MeshInstance3D" parent="RoomBow"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 2.2)
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="Marker" type="MeshInstance3D" parent="RoomBow"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 1.15, 2.2)
+mesh = SubResource("BoxMesh_marker")
+surface_material_override/0 = SubResource("StandardMaterial3D_bow")
+
+[node name="Label3D" type="Label3D" parent="RoomBow"]
+transform = Transform3D(0.012, 0, 0, 0, 0.012, 0, 0, 0, 0.012, 0, 2.3, 0.15)
+text = "BOW"
+font_size = 64
+modulate = Color(1, 1, 1, 1)
+
+[node name="Camera3D" type="Camera3D" parent="RoomBow"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 1.45, 6)
+
+[node name="RoomSwitcher" type="Node" parent="."]
+script = ExtResource("2_switcher")
+room_a_camera_path = NodePath("../RoomA/Camera3D")
+room_b_camera_path = NodePath("../RoomB/Camera3D")
+bow_room_camera_path = NodePath("../RoomBow/Camera3D")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Minimap" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_minimap")
+room_switcher_path = NodePath("../../RoomSwitcher")
+room_a_button_path = NodePath("RoomAButton")
+room_b_button_path = NodePath("RoomBButton")
+bow_room_button_path = NodePath("BowRoomButton")
+
+[node name="RoomAButton" type="Button" parent="CanvasLayer/Minimap"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 144.0
+offset_bottom = 56.0
+toggle_mode = true
+text = "Room A"
+
+[node name="RoomBButton" type="Button" parent="CanvasLayer/Minimap"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 64.0
+offset_right = 144.0
+offset_bottom = 96.0
+toggle_mode = true
+text = "Room B"
+
+[node name="BowRoomButton" type="Button" parent="CanvasLayer/Minimap"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 104.0
+offset_right = 144.0
+offset_bottom = 136.0
+toggle_mode = true
+text = "Bow"

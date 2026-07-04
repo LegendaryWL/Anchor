@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://interactiontargetdemo"]
+
+[ext_resource type="Script" path="res://mock/interaction_target_demo_driver.gd" id="1_driver"]
+[ext_resource type="Script" path="res://interaction/interaction_target.gd" id="2_target"]
+
+[node name="InteractionTargetDemo" type="Node"]
+script = ExtResource("1_driver")
+
+[node name="AnchorTarget" type="Node" parent="."]
+script = ExtResource("2_target")
+interaction_type = "repair_anchor"
+target_id = "anchor_device"
+prompt_text = "按住：修理锚回收装置"
+required_hold_time = 1.0
+
+[node name="WindowTarget" type="Node" parent="."]
+script = ExtResource("2_target")
+interaction_type = "fix_window"
+target_id = "window_room_a_0"
+prompt_text = "按住：修补窗户"
+required_hold_time = 2.0
+
+[node name="CandleTarget" type="Node" parent="."]
+script = ExtResource("2_target")
+interaction_type = "light_candle"
+target_id = "candle_room_a_0"
+prompt_text = "按住：点亮蜡烛"
+required_hold_time = 1.0
+
+[node name="BlackHandTarget" type="Node" parent="."]
+script = ExtResource("2_target")
+interaction_type = "expel_black_hand"
+target_id = "candle_room_a_0"
+required_clicks = 5

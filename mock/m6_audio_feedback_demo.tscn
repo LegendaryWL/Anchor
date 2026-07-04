@@ -1,0 +1,97 @@
+[gd_scene load_steps=6 format=3 uid="uid://m6audiofeedbackdemo"]
+
+[ext_resource type="Script" path="res://mock/m6_audio_feedback_demo_driver.gd" id="1_driver"]
+[ext_resource type="Script" path="res://audio/audio_feedback.gd" id="2_audio"]
+[ext_resource type="Script" path="res://interaction/hold_interaction.gd" id="3_hold"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.055, 0.06, 0.07, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.31, 0.34, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 18.0
+content_margin_top = 16.0
+content_margin_right = 18.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
+bg_color = Color(0.014, 0.016, 0.02, 1)
+
+[node name="M6AudioFeedbackDemo" type="Node"]
+script = ExtResource("1_driver")
+
+[node name="AudioFeedback" type="Node" parent="."]
+script = ExtResource("2_audio")
+
+[node name="HoldAnchor" type="Node" parent="."]
+script = ExtResource("3_hold")
+action_type = "repair_anchor"
+target_id = "anchor_device"
+prompt_text = "按住：修理锚回收装置"
+required_hold_time = 1.5
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="Panel" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_background")
+
+[node name="ActionPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 430.0
+offset_bottom = 344.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UI/ActionPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/UI/ActionPanel/VBox"]
+layout_mode = 2
+text = "M6 音效反馈 Demo"
+
+[node name="StatusLabel" type="Label" parent="CanvasLayer/UI/ActionPanel/VBox"]
+layout_mode = 2
+text = "点击按钮触发对应音效"
+
+[node name="OpeningButton" type="Button" parent="CanvasLayer/UI/ActionPanel/VBox"]
+layout_mode = 2
+text = "播放开场音乐"
+
+[node name="WindowAttackButton" type="Button" parent="CanvasLayer/UI/ActionPanel/VBox"]
+layout_mode = 2
+text = "触发攻窗音效"
+
+[node name="CandleAttackButton" type="Button" parent="CanvasLayer/UI/ActionPanel/VBox"]
+layout_mode = 2
+text = "触发蜡烛低语"
+
+[node name="LowSanButton" type="Button" parent="CanvasLayer/UI/ActionPanel/VBox"]
+layout_mode = 2
+text = "触发低 SAN 警告"
+
+[node name="AnchorButton" type="Button" parent="CanvasLayer/UI/ActionPanel/VBox"]
+layout_mode = 2
+text = "按住修锚机器声"
