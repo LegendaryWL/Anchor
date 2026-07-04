@@ -1,0 +1,139 @@
+[gd_scene load_steps=6 format=3 uid="uid://m2holdinteractiondemo"]
+
+[ext_resource type="Script" path="res://mock/m2_hold_interaction_driver.gd" id="1_driver"]
+[ext_resource type="Script" path="res://interaction/hold_interaction.gd" id="2_hold"]
+[ext_resource type="Script" path="res://ui/progress_prompt.gd" id="3_prompt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.06, 0.07, 0.09, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.38, 0.43, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prompt"]
+bg_color = Color(0, 0, 0, 0.74)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[node name="M2HoldInteractionDemo" type="Node"]
+script = ExtResource("1_driver")
+
+[node name="HoldAnchor" type="Node" parent="."]
+script = ExtResource("2_hold")
+action_type = "repair_anchor"
+target_id = "anchor_device"
+prompt_text = "按住：修理锚回收装置"
+required_hold_time = 1.5
+
+[node name="HoldWindow" type="Node" parent="."]
+script = ExtResource("2_hold")
+action_type = "fix_window"
+target_id = "window_room_a_0"
+prompt_text = "按住：修补窗户"
+required_hold_time = 2.0
+
+[node name="HoldCandle" type="Node" parent="."]
+script = ExtResource("2_hold")
+action_type = "light_candle"
+target_id = "candle_room_a_0"
+prompt_text = "按住：点亮蜡烛"
+required_hold_time = 1.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 430.0
+offset_bottom = 300.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UI/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+text = "M2 长按交互 Demo"
+
+[node name="StatusLabel" type="Label" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+text = "按住按钮观察读条和状态变化"
+
+[node name="AnchorLabel" type="Label" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+
+[node name="WindowLabel" type="Label" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+
+[node name="CandleLabel" type="Label" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+
+[node name="AnchorButton" type="Button" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+text = "按住修锚"
+
+[node name="WindowButton" type="Button" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+text = "按住修窗"
+
+[node name="CandleButton" type="Button" parent="CanvasLayer/UI/Panel/VBox"]
+layout_mode = 2
+text = "按住点蜡烛"
+
+[node name="ProgressPrompt" type="PanelContainer" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -116.0
+offset_right = 170.0
+offset_bottom = -42.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_prompt")
+script = ExtResource("3_prompt")
+label_path = NodePath("VBox/PromptLabel")
+progress_bar_path = NodePath("VBox/ProgressBar")
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UI/ProgressPrompt"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PromptLabel" type="Label" parent="CanvasLayer/UI/ProgressPrompt/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/UI/ProgressPrompt/VBox"]
+layout_mode = 2
+show_percentage = false

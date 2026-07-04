@@ -1,0 +1,218 @@
+[gd_scene load_steps=6 format=3 uid="uid://m5flowdemo"]
+
+[ext_resource type="Script" path="res://mock/m5_flow_demo_driver.gd" id="1_driver"]
+[ext_resource type="Script" path="res://ui/exit_dialog.gd" id="2_exit"]
+[ext_resource type="Script" path="res://ui/game_result_screen.gd" id="3_result"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.055, 0.06, 0.07, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.26, 0.31, 0.34, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 18.0
+content_margin_top = 16.0
+content_margin_right = 18.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_overlay"]
+bg_color = Color(0, 0, 0, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 30.0
+content_margin_top = 24.0
+content_margin_right = 30.0
+content_margin_bottom = 24.0
+
+[node name="M5FlowDemo" type="Node"]
+script = ExtResource("1_driver")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.015, 0.017, 0.02, 1)
+
+[node name="MainMenu" type="PanelContainer" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -72.0
+offset_right = 160.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UI/MainMenu"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/UI/MainMenu/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Anchor"
+
+[node name="StartButton" type="Button" parent="CanvasLayer/UI/MainMenu/VBox"]
+layout_mode = 2
+text = "开始游戏"
+
+[node name="GamePanel" type="Control" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ExitButton" type="Button" parent="CanvasLayer/UI/GamePanel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -112.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 56.0
+grow_horizontal = 0
+text = "退出"
+
+[node name="ActionPanel" type="PanelContainer" parent="CanvasLayer/UI/GamePanel"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 372.0
+offset_bottom = 240.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UI/GamePanel/ActionPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/UI/GamePanel/ActionPanel/VBox"]
+layout_mode = 2
+text = "M5 流程调试"
+
+[node name="StatusLabel" type="Label" parent="CanvasLayer/UI/GamePanel/ActionPanel/VBox"]
+layout_mode = 2
+text = "游戏中"
+
+[node name="VictoryButton" type="Button" parent="CanvasLayer/UI/GamePanel/ActionPanel/VBox"]
+layout_mode = 2
+text = "触发胜利"
+
+[node name="DefeatButton" type="Button" parent="CanvasLayer/UI/GamePanel/ActionPanel/VBox"]
+layout_mode = 2
+text = "触发失败"
+
+[node name="ExitDialog" type="Control" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_exit")
+entry_button_path = NodePath("../GamePanel/ExitButton")
+dialog_root_path = NodePath("DialogPanel")
+confirm_button_path = NodePath("DialogPanel/VBox/ConfirmButton")
+
+[node name="DialogPanel" type="PanelContainer" parent="CanvasLayer/UI/ExitDialog"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -170.0
+offset_top = -58.0
+offset_right = 170.0
+offset_bottom = 58.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_overlay")
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UI/ExitDialog/DialogPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="QuestionLabel" type="Label" parent="CanvasLayer/UI/ExitDialog/DialogPanel/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "是否退出游戏？"
+
+[node name="ConfirmButton" type="Button" parent="CanvasLayer/UI/ExitDialog/DialogPanel/VBox"]
+layout_mode = 2
+text = "确认"
+
+[node name="GameResultScreen" type="PanelContainer" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_overlay")
+script = ExtResource("3_result")
+title_label_path = NodePath("VBox/TitleLabel")
+body_label_path = NodePath("VBox/BodyLabel")
+return_button_path = NodePath("VBox/ReturnButton")
+input_root_path = NodePath("../GamePanel")
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UI/GameResultScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -120.0
+offset_right = 300.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/UI/GameResultScreen/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "游戏结束"
+
+[node name="BodyLabel" type="Label" parent="CanvasLayer/UI/GameResultScreen/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+text = ""
+
+[node name="ReturnButton" type="Button" parent="CanvasLayer/UI/GameResultScreen/VBox"]
+layout_mode = 2
+text = "返回主界面"

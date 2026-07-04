@@ -161,7 +161,7 @@ func run_scenario_repair_victory() -> void:
 	print("\n--- 剧本 E: 修理锚 60s -> 胜利 ---")
 	reset_game()
 
-	mock_switch_camera("room_bow")
+	mock_switch_camera("bow_room")
 	mock_repair_anchor(60.0)
 
 	check("E victory", GameProcessManager.game_over_reason, GameProcessManager.GameOverReason.VICTORY)
