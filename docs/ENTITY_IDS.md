@@ -79,17 +79,22 @@ GameManager.switch_room("bow_room_1")  # 走廊视角 1
 
 ---
 
-## 6. 程序 B API
+## 6. 程序 B / C API
+
+完整接口表见 **`docs/API_FOR_BC.md`**（信号、交互 API、`get_snapshot` 结构、阶段行为、B/C 接法示例）。
+
+常用入口：
 
 ```gdscript
-GameManager.switch_room(view_id)           # 相机用 view_id
+GameManager.switch_room(view_id)
 GameManager.repair_window(window_id, delta)
 GameManager.light_candle(candle_id)
-GameManager.can_repair_window(window_id)   # 含视角校验
+GameManager.expel_black_hand(candle_id)
+GameManager.can_repair_window(window_id)
 GameManager.can_light_candle(candle_id)
+GameManager.can_expel_black_hand(candle_id)
+GameManager.get_candle_under_attack_in_view()
 GameManager.get_snapshot()
-# snapshot["current_room_id"]  逻辑房间
-# snapshot["current_view_id"]  当前视角
 ```
 
 ---
@@ -98,5 +103,6 @@ GameManager.get_snapshot()
 
 | 版本 | 日期 | 说明 |
 |---|---|---|
+| 2.2 | 2026-07-05 | API 迁至 docs/API_FOR_BC.md |
 | 2.1 | 2026-07-04 | 走廊双视角；SAN 按灭烛数量扣；view 字段 |
 | 2.0 | 2026-07-04 | 对齐 UPDATED_DESIGN §5.1 |
