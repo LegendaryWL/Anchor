@@ -14,6 +14,12 @@ config/name="CiGA2026"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameProcessManager="*res://autoload/game_process_manager.gd"
+RoomStateManager="*res://autoload/room_state_manager.gd"
+EventManager="*res://autoload/event_manager.gd"
+
 [display]
 
 window/stretch/mode="canvas_items"
