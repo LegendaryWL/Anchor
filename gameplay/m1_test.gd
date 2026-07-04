@@ -68,27 +68,39 @@ func _unhandled_input(event: InputEvent) -> void:
 			_last_game_over_result = ""
 			print("[手动] 已重置")
 		KEY_1:
-			GameManager.extinguish_candle("candle_room_a_0")
-			print("[手动] 熄灭 candle_room_a_0")
+			var candle_id := GameManager.get_primary_lit_candle_in_view()
+			if candle_id.is_empty():
+				print("[手动] 当前视角无已点燃蜡烛")
+			elif GameManager.extinguish_candle(candle_id):
+				print("[手动] 熄灭 %s" % candle_id)
+			else:
+				print("[手动] 无法熄灭 %s" % candle_id)
 		KEY_2:
-			GameManager.break_window("window_room_a_0")
-			print("[手动] 打碎 window_room_a_0")
+			var window_id := GameManager.get_primary_window_in_view()
+			if window_id.is_empty():
+				print("[手动] 当前视角无可操作窗户")
+			elif GameManager.break_window(window_id):
+				print("[手动] 打碎 %s" % window_id)
+			else:
+				print("[手动] 无法打碎 %s" % window_id)
 
 
 func _refresh_hud() -> void:
-	var candle_lit: bool = GameManager.candles["candle_room_a_0"]["lit"]
-	var window: Dictionary = GameManager.windows["window_room_a_0"]
+	var candle_id := GameManager.get_primary_candle_in_view()
+	var candle_lit: bool = GameManager.candles[candle_id]["lit"] if not candle_id.is_empty() else true
+	var window_id := GameManager.get_primary_window_in_view()
+	var window: Dictionary = GameManager.windows[window_id] if not window_id.is_empty() else {}
 	var san_rate: String = _describe_san_rate()
 
 	_hud_label.text = """M1 测试 HUD
 SAN: %.1f / %.0f  (%s)
 锚进度: %.0f%% (%.1f / %.0f s)
-阶段: %d  房间: %s
-candle_room_a_0: %s
-window_room_a_0: %.0f  破碎: %s
+阶段: %d  房间: %s  视角: %s
+当前烛: %s (%s)
+当前窗: %s (%.0f 破碎:%s)
 游戏结束: %s %s
 
-操作: SPACE修锚 | 1灭烛 | 2破窗 | R重置
+操作: SPACE修锚 | 1灭当前烛 | 2破当前窗 | R重置
 提示: 全蜡烛亮 SAN↑+1.5/s | Phase2灭烛 SAN↓-5/s""" % [
 		GameManager.san,
 		GameManager.san_max,
@@ -98,9 +110,12 @@ window_room_a_0: %.0f  破碎: %s
 		GameManager.anchor_target,
 		GameManager.phase,
 		GameManager.current_room_id,
+		GameManager.current_view_id,
+		candle_id if not candle_id.is_empty() else "无",
 		"亮" if candle_lit else "灭",
-		window["durability"],
-		"是" if window["broken"] else "否",
+		window_id if not window_id.is_empty() else "无",
+		window.get("durability", 0.0),
+		"是" if window.get("broken", false) else "否",
 		"是" if GameManager.is_game_over else "否",
 		("(%s)" % _last_game_over_result) if _last_game_over_result else "",
 	]
@@ -114,8 +129,10 @@ func _describe_san_rate() -> String:
 		if not candle["lit"]:
 			all_lit = false
 			break
-	if GameManager.phase == GameManager.PHASE_CANDLE and not all_lit:
-		return "下降 -5/s"
+	if GameManager.phase == GameManager.PHASE_CANDLE:
+		var unlit: int = GameManager.count_unlit_candles()
+		if unlit > 0:
+			return "下降 -%.0f/s" % (5.0 * unlit)
 	if all_lit:
 		return "恢复 +1.5/s"
 	return "持平"
@@ -142,8 +159,8 @@ func _run_lose_test() -> void:
 	print("\n--- M1-B: Phase2 灭烛 -> SAN 归零 ---")
 	GameManager.reset_game()
 	_last_game_over_result = ""
-	GameManager.break_window("window_room_a_0")
-	GameManager.extinguish_candle("candle_room_a_0")
+	check("M1-B break window", GameManager.break_window("window_room_a_0"), true)
+	check("M1-B extinguish candle", GameManager.extinguish_candle("candle_room_a_0"), true)
 
 	var elapsed := 0.0
 	while elapsed < LOSE_WAIT_SECONDS and not GameManager.is_game_over:

@@ -2,7 +2,7 @@ extends Node
 
 signal san_changed(current: float, max_value: float)
 signal anchor_progress_changed(value: float)
-signal window_changed(window_id: String, durability: float, is_broken: bool)
+signal window_changed(window_id: String, durability: int, is_broken: bool)
 signal candle_changed(candle_id: String, lit: bool)
 signal phase_changed(phase: int)
 signal room_changed(room_id: String)
@@ -12,6 +12,11 @@ signal game_over(result: String)
 
 const PHASE_WINDOW := 1
 const PHASE_CANDLE := 2
+const WINDOW_DURABILITY_MAX := 100
+const GAME_TIME_PASSIVE_DECAY_SEC := 120.0
+const WINDOW_REPAIR_RATE := 4.0
+const WINDOW_ATTACK_RATE := 5.0
+const WINDOW_PASSIVE_DECAY_RATE := 8.0
 
 var phase: int = PHASE_WINDOW
 var san: float = 100.0
@@ -19,20 +24,27 @@ var san_max: float = 100.0
 var anchor_progress: float = 0.0
 var anchor_target: float = 60.0
 var current_room_id: String = "room_a"
+var current_view_id: String = "room_a"
 var is_game_over: bool = false
+var game_time: float = 0.0
+
+const BOW_VIEWS := ["bow_room_0", "bow_room_1"]
 
 var windows: Dictionary = {
-	"window_room_a_0": {"room": "room_a", "durability": 100.0, "broken": false},
-	"window_room_a_1": {"room": "room_a", "durability": 100.0, "broken": false},
-	"window_room_b_0": {"room": "room_b", "durability": 100.0, "broken": false},
-	"window_room_b_1": {"room": "room_b", "durability": 100.0, "broken": false},
+	"window_room_a_0": {"room": "room_a", "view": "room_a", "durability": 100, "broken": false},
+	"window_room_a_1": {"room": "room_a", "view": "room_a", "durability": 100, "broken": false},
+	"window_room_b_0": {"room": "room_b", "view": "room_b", "durability": 100, "broken": false},
+	"window_room_b_1": {"room": "room_b", "view": "room_b", "durability": 100, "broken": false},
+	"window_bow_room_0": {"room": "bow_room", "view": "bow_room_1", "durability": 100, "broken": false},
 }
 
 var candles: Dictionary = {
-	"candle_room_a_0": {"room": "room_a", "lit": true},
-	"candle_room_a_1": {"room": "room_a", "lit": true},
-	"candle_room_b_0": {"room": "room_b", "lit": true},
-	"candle_room_b_1": {"room": "room_b", "lit": true},
+	"candle_room_a_0": {"room": "room_a", "view": "room_a", "lit": true},
+	"candle_room_a_1": {"room": "room_a", "view": "room_a", "lit": true},
+	"candle_room_b_0": {"room": "room_b", "view": "room_b", "lit": true},
+	"candle_room_b_1": {"room": "room_b", "view": "room_b", "lit": true},
+	"candle_bow_room_0": {"room": "bow_room", "view": "bow_room_0", "lit": true},
+	"candle_bow_room_1": {"room": "bow_room", "view": "bow_room_1", "lit": true},
 }
 
 var active_attack: Dictionary = {}
@@ -44,6 +56,8 @@ var attacks_enabled: bool = false
 func _process(delta: float) -> void:
 	if is_game_over:
 		return
+	game_time += delta
+	_update_window_passive_decay(delta)
 	_update_attack(delta)
 	_update_san(delta)
 	_check_game_over()
@@ -56,39 +70,193 @@ func repair_anchor(delta: float) -> void:
 	anchor_progress_changed.emit(anchor_progress / anchor_target)
 
 
-func repair_window(window_id: String, delta: float) -> void:
+func repair_window(window_id: String, delta: float) -> bool:
+	if is_game_over:
+		return false
 	if not windows.has(window_id):
-		return
+		return false
 	var window: Dictionary = windows[window_id]
 	if window["broken"]:
-		return
-	window["durability"] = minf(window["durability"] + 4.0 * delta, 100.0)
+		return false
+	if not _can_interact_in_current_view(window):
+		return false
+	_apply_window_durability_change(window, WINDOW_REPAIR_RATE * delta)
 	window_changed.emit(window_id, window["durability"], window["broken"])
 	if active_attack.get("target_id", "") == window_id:
 		_resolve_attack()
+	return true
 
 
-func light_candle(candle_id: String) -> void:
+func light_candle(candle_id: String) -> bool:
+	if is_game_over:
+		return false
 	if not candles.has(candle_id):
-		return
-	candles[candle_id]["lit"] = true
+		return false
+	var candle: Dictionary = candles[candle_id]
+	if not _can_interact_in_current_view(candle):
+		return false
+	candle["lit"] = true
 	candle_changed.emit(candle_id, true)
 	if active_attack.get("target_id", "") == candle_id:
 		_resolve_attack()
+	return true
 
 
-func extinguish_candle(candle_id: String) -> void:
+func extinguish_candle(candle_id: String) -> bool:
+	if is_game_over:
+		return false
+	if not candles.has(candle_id):
+		return false
+	var candle: Dictionary = candles[candle_id]
+	if not _can_interact_in_current_view(candle):
+		return false
 	_extinguish_candle(candle_id)
+	return true
 
 
-func expel_black_hand(candle_id: String) -> void:
+func expel_black_hand(candle_id: String) -> bool:
+	if is_game_over:
+		return false
+	if not candles.has(candle_id):
+		return false
+	if not _can_interact_in_current_view(candles[candle_id]):
+		return false
 	if active_attack.get("target_id", "") == candle_id:
 		_resolve_attack()
+		return true
+	return false
 
 
-func switch_room(room_id: String) -> void:
-	current_room_id = room_id
-	room_changed.emit(room_id)
+func switch_room(view_id: String) -> void:
+	if is_game_over:
+		return
+	if view_id in BOW_VIEWS:
+		current_room_id = "bow_room"
+		current_view_id = view_id
+	else:
+		current_room_id = view_id
+		current_view_id = view_id
+	room_changed.emit(view_id)
+
+
+func can_repair_window(window_id: String) -> bool:
+	if is_game_over or not windows.has(window_id):
+		return false
+	var window: Dictionary = windows[window_id]
+	return (
+		not window["broken"]
+		and window["durability"] < WINDOW_DURABILITY_MAX
+		and _can_interact_in_current_view(window)
+	)
+
+
+func can_light_candle(candle_id: String) -> bool:
+	if is_game_over or not candles.has(candle_id):
+		return false
+	var candle: Dictionary = candles[candle_id]
+	return not candle["lit"] and _can_interact_in_current_view(candle)
+
+
+func count_unlit_candles() -> int:
+	var count := 0
+	for candle in candles.values():
+		if not candle["lit"]:
+			count += 1
+	return count
+
+
+func _can_interact_in_current_view(entity: Dictionary) -> bool:
+	return entity.get("view", entity["room"]) == current_view_id
+
+
+func get_window_ids_in_current_view() -> Array[String]:
+	var ids: Array[String] = []
+	for window_id in windows.keys():
+		if _can_interact_in_current_view(windows[window_id]):
+			ids.append(window_id)
+	return ids
+
+
+func get_candle_ids_in_current_view() -> Array[String]:
+	var ids: Array[String] = []
+	for candle_id in candles.keys():
+		if _can_interact_in_current_view(candles[candle_id]):
+			ids.append(candle_id)
+	return ids
+
+
+func get_primary_window_in_view() -> String:
+	for window_id in get_window_ids_in_current_view():
+		if can_repair_window(window_id):
+			return window_id
+	for window_id in get_window_ids_in_current_view():
+		var window: Dictionary = windows[window_id]
+		if not window["broken"]:
+			return window_id
+	return ""
+
+
+func get_primary_candle_in_view(prefer_unlit: bool = false) -> String:
+	if prefer_unlit:
+		for candle_id in get_candle_ids_in_current_view():
+			if not candles[candle_id]["lit"]:
+				return candle_id
+	for candle_id in get_candle_ids_in_current_view():
+		return candle_id
+	return ""
+
+
+func get_primary_lit_candle_in_view() -> String:
+	for candle_id in get_candle_ids_in_current_view():
+		if candles[candle_id]["lit"]:
+			return candle_id
+	return ""
+
+
+func chip_window_damage(window_id: String, amount: int) -> bool:
+	if is_game_over or not windows.has(window_id):
+		return false
+	var window: Dictionary = windows[window_id]
+	if window["broken"]:
+		return false
+	if not _can_interact_in_current_view(window):
+		return false
+	_apply_window_durability_change(window, -float(amount))
+	window_changed.emit(window_id, window["durability"], window["broken"])
+	return true
+
+
+func get_window_state(window_id: String) -> Dictionary:
+	return windows.get(window_id, {}).duplicate()
+
+
+func get_candle_state(candle_id: String) -> Dictionary:
+	return candles.get(candle_id, {}).duplicate()
+
+
+func get_windows_snapshot() -> Dictionary:
+	var snapshot: Dictionary = {}
+	for window_id in windows.keys():
+		var window: Dictionary = windows[window_id]
+		snapshot[window_id] = {
+			"room": window["room"],
+			"view": window.get("view", window["room"]),
+			"durability": window["durability"],
+			"broken": window["broken"],
+		}
+	return snapshot
+
+
+func get_candles_snapshot() -> Dictionary:
+	var snapshot: Dictionary = {}
+	for candle_id in candles.keys():
+		var candle: Dictionary = candles[candle_id]
+		snapshot[candle_id] = {
+			"room": candle["room"],
+			"view": candle.get("view", candle["room"]),
+			"lit": candle["lit"],
+		}
+	return snapshot
 
 
 func set_attacks_enabled(enabled: bool) -> void:
@@ -101,15 +269,18 @@ func reset_game() -> void:
 	san_max = 100.0
 	anchor_progress = 0.0
 	current_room_id = "room_a"
+	current_view_id = "room_a"
 	is_game_over = false
+	game_time = 0.0
 	active_attack = {}
 	attack_timer = 0.0
 	next_attack_timer = 6.0
 	attacks_enabled = false
 
 	for window_id in windows.keys():
-		windows[window_id]["durability"] = 100.0
+		windows[window_id]["durability"] = WINDOW_DURABILITY_MAX
 		windows[window_id]["broken"] = false
+		windows[window_id]["_durability_frac"] = 0.0
 
 	for candle_id in candles.keys():
 		candles[candle_id]["lit"] = true
@@ -122,8 +293,13 @@ func get_snapshot() -> Dictionary:
 		"san_max": san_max,
 		"anchor_progress": anchor_progress / anchor_target,
 		"current_room_id": current_room_id,
+		"current_view_id": current_view_id,
+		"game_time": game_time,
+		"unlit_candle_count": count_unlit_candles(),
 		"active_attack": active_attack.duplicate(),
 		"is_game_over": is_game_over,
+		"windows": get_windows_snapshot(),
+		"candles": get_candles_snapshot(),
 	}
 
 
@@ -141,13 +317,25 @@ func _update_san(delta: float) -> void:
 		san -= delta * 1.0
 
 	if phase == PHASE_CANDLE:
-		for candle in candles.values():
-			if not candle["lit"]:
-				san -= delta * 5.0
-				break
+		var unlit_count := count_unlit_candles()
+		if unlit_count > 0:
+			san -= delta * 5.0 * float(unlit_count)
 
 	san = clampf(san, 0.0, san_max)
 	san_changed.emit(san, san_max)
+
+
+func _update_window_passive_decay(delta: float) -> void:
+	if game_time <= GAME_TIME_PASSIVE_DECAY_SEC:
+		return
+	for window_id in windows.keys():
+		var window: Dictionary = windows[window_id]
+		if window["broken"]:
+			continue
+		var before: int = window["durability"]
+		_apply_window_durability_change(window, -WINDOW_PASSIVE_DECAY_RATE * delta)
+		if window["durability"] != before or window["broken"]:
+			window_changed.emit(window_id, window["durability"], window["broken"])
 
 
 func _update_attack(delta: float) -> void:
@@ -169,7 +357,14 @@ func _update_attack(delta: float) -> void:
 
 func _start_random_attack() -> void:
 	if phase == PHASE_WINDOW:
-		var ids: Array = windows.keys()
+		var ids: Array[String] = []
+		for window_id in windows.keys():
+			var window: Dictionary = windows[window_id]
+			if not window["broken"]:
+				ids.append(window_id)
+		if ids.is_empty():
+			next_attack_timer = 4.0
+			return
 		var target_id: String = ids[randi() % ids.size()]
 		active_attack = {"type": "window", "target_id": target_id}
 		attack_timer = randf_range(8.0, 15.0)
@@ -192,10 +387,7 @@ func _damage_window(window_id: String, delta: float) -> void:
 	var window: Dictionary = windows[window_id]
 	if window["broken"]:
 		return
-	window["durability"] = maxf(window["durability"] - 5.0 * delta, 0.0)
-	if window["durability"] <= 0.0:
-		window["broken"] = true
-		_enter_phase_2()
+	_apply_window_durability_change(window, -WINDOW_ATTACK_RATE * delta)
 	window_changed.emit(window_id, window["durability"], window["broken"])
 
 
@@ -212,14 +404,32 @@ func _extinguish_candle(candle_id: String) -> void:
 	candle_changed.emit(candle_id, false)
 
 
-func break_window(window_id: String) -> void:
-	if not windows.has(window_id):
+func _apply_window_durability_change(window: Dictionary, delta: float) -> void:
+	if window["broken"]:
 		return
+	var total := float(window["durability"]) + window.get("_durability_frac", 0.0) + delta
+	total = clampf(total, 0.0, float(WINDOW_DURABILITY_MAX))
+	window["durability"] = int(total)
+	window["_durability_frac"] = total - float(window["durability"])
+	if window["durability"] <= 0:
+		window["durability"] = 0
+		window["_durability_frac"] = 0.0
+		window["broken"] = true
+		_enter_phase_2()
+
+
+func break_window(window_id: String) -> bool:
+	if not windows.has(window_id):
+		return false
 	var window: Dictionary = windows[window_id]
-	window["durability"] = 0.0
+	if not _can_interact_in_current_view(window):
+		return false
+	window["durability"] = 0
+	window["_durability_frac"] = 0.0
 	window["broken"] = true
-	window_changed.emit(window_id, 0.0, true)
+	window_changed.emit(window_id, 0, true)
 	_enter_phase_2()
+	return true
 
 
 func _resolve_attack() -> void:
