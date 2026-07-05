@@ -329,9 +329,9 @@ transform = Transform3D(0.1, 0, 0, 0, 3, 0, 0, 0, 4, 2, 1.5, -6)
 visible = false
 mesh = SubResource("BoxMesh_b1yhx")
 
-[node name="Windows" type="Node3D" parent="World/Rooms/BowRoom"]
+[node name="Windows" type="Node3D" parent="World/Rooms/BowRoom" unique_id=860793518]
 
-[node name="window_bow_room_0" type="MeshInstance3D" parent="World/Rooms/BowRoom/Windows"]
+[node name="window_bow_room_0" type="MeshInstance3D" parent="World/Rooms/BowRoom/Windows" unique_id=98718478]
 transform = Transform3D(0, 0, 0.4, 0, 0.6, 0, -0.05, 0, 0, 55.05, 0.266, -1.63)
 mesh = SubResource("BoxMesh_6yptn")
 
