@@ -1,0 +1,42 @@
+# Blender 5.1.2 MTL File: 'gmtk game jam2025.blend'
+# www.blender.org
+
+newmtl computer
+Ns 42.580017
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.200000
+d 1.000000
+illum 2
+map_Kd D:/gmtk game jam 2025/computer1.png
+
+newmtl desk
+Ns 16.124966
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.100000
+d 1.000000
+illum 2
+map_Kd D:/gmtk game jam 2025/desk.png
+
+newmtl glass
+Ns 925.260803
+Ka 0.122511 0.122511 0.122511
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.652164
+illum 6
+map_Kd D:/gmtk game jam 2025/glass.png
+
+newmtl horse
+Ns 383.220001
+Ka 0.206349 0.206349 0.206349
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.300000
+d 1.000000
+illum 3
+map_Kd D:/gmtk game jam 2025/horse.png

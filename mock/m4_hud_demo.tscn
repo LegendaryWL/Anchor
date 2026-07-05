@@ -113,7 +113,7 @@ text = "阶段：1"
 
 [node name="RoomLabel" type="Label" parent="CanvasLayer/UI/HUD/TopLeftPanel/VBox"]
 layout_mode = 2
-text = "当前位置：房间 A"
+text = "当前位置：驾驶室"
 
 [node name="RepairPanel" type="PanelContainer" parent="CanvasLayer/UI/HUD"]
 layout_mode = 1
@@ -188,7 +188,7 @@ layout_mode = 0
 offset_right = 132.0
 offset_bottom = 32.0
 toggle_mode = true
-text = "Room A"
+text = "驾驶室"
 
 [node name="RoomBButton" type="Button" parent="CanvasLayer/UI/HUD/Minimap"]
 layout_mode = 0
@@ -196,7 +196,7 @@ offset_top = 42.0
 offset_right = 132.0
 offset_bottom = 74.0
 toggle_mode = true
-text = "Room B"
+text = "休息室"
 
 [node name="BowRoomButton" type="Button" parent="CanvasLayer/UI/HUD/Minimap"]
 layout_mode = 0
@@ -204,7 +204,7 @@ offset_top = 84.0
 offset_right = 132.0
 offset_bottom = 116.0
 toggle_mode = true
-text = "Bow"
+text = "走廊"
 
 [node name="ActionPanel" type="PanelContainer" parent="CanvasLayer/UI/HUD"]
 layout_mode = 1
