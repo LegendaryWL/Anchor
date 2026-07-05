@@ -100,7 +100,7 @@ audio/audio_feedback.gd
 - M4 已完成：`mock/m4_hud_demo.tscn`，HUD 自动绑定 SAN、锚进度、阶段、房间、窗户、蜡烛和游戏结束状态。
 - M5 已完成：`mock/m5_flow_demo.tscn`，退出确认、胜利/失败界面、返回主界面流程。
 - M6 已完成：`mock/m6_audio_feedback_demo.tscn`，事件、UI、房间切换、修锚、蜡烛和低 SAN 音效反馈。
-- B 侧独立补充已完成：`interaction/interaction_target.gd`、低 SAN 红屏、默认船头 ID 统一为 `bow_room`。
+- B 侧独立补充已完成：`interaction/interaction_target.gd`、低 SAN 红屏、默认走廊 ID 统一为 `bow_room`。
 
 ## 4. 和 A/C 的对接约定
 
@@ -125,6 +125,14 @@ candle_room_b_1
 
 anchor_device
 ```
+
+显示命名暂定：
+
+| 内部 ID | 玩家看到的房间名 | 场景定位 |
+|---|---|---|
+| `room_a` | 驾驶室 | 控制台、航海/船体参考、窗户和蜡烛 |
+| `room_b` | 休息室 | 床铺/生活区、窗户、蜡烛、黑手攻击点 |
+| `bow_room` | 走廊 | 连接空间、小地图/通道参考、备用木板/窗烛占位 |
 
 注意：正式对接文档 `docs/PROGRAM_B_INTERFACE_CONTRACT.md` 建议最终统一使用 `bow_room`，`room_bow` 仅作为旧 mock 兼容名。
 
@@ -170,7 +178,7 @@ B 只需要 A 保证：
 
 目标：B 可以在不等最终美术的情况下开工。
 
-- 确认房间 ID：`room_a`、`room_b`、船头房间 ID。
+- 确认房间 ID：`room_a`、`room_b`、走廊房间 ID（内部仍使用 `bow_room`）。
 - 确认四扇窗和四根蜡烛 ID。
 - 确认 C 的相机节点和可交互节点路径。
 - 确认主场景里 UI 根节点位置。
@@ -185,9 +193,9 @@ B 只需要 A 保证：
 目标：玩家可以通过小地图 / 按钮切换房间。
 
 - 实现 `ui/minimap.gd`：
-  - 房间 A 按钮。
-  - 房间 B 按钮。
-  - 船头房间按钮。
+  - 驾驶室按钮。
+  - 休息室按钮。
+  - 走廊按钮。
 - 实现 `interaction/room_switcher.gd`：
   - 点击按钮后调用 `RoomStateManager.set_current_room(room_id)`。
   - 监听 `RoomStateManager.room_changed`。
@@ -339,7 +347,7 @@ UI 内容：
 /Users/ryuuna/Documents/GitHub/project-for-future/ai-help/anchor/resources
 ```
 
-可先接入这些已有音频：
+可先接入这些已有音频 / 场景素材：
 
 | 用途 | 素材 |
 |---|---|
@@ -352,7 +360,12 @@ UI 内容：
 | 鼠标点击 / 确认反馈 | `click.mp3` |
 | 锚机 / 回收装置运转 | `freesound_community-electric-hoist-75932.mp3` |
 | SAN 过低警告 | `sanity2low.mp3` 或 `sanity2low_2.mp3` |
-| 开场 / 主界面 | `opening.mp3` 或 `opening_A_Turn_for_the_Worse.mp3` |
+| 开场 / 主界面 | `opening.mp3`、`opening_A_Turn_for_the_Worse.mp3`、`opening_A_Turn_for_the_Worse_2.mp3` 或 `opening_test.mp3` |
+| 场景 / 地图参考 | `2026 ciga gamejam_3_map.fbx` |
+| 场景 / 驾驶室 | `bridge.fbx` |
+| 场景 / 休息室 | `rest_room.fbx` |
+| 场景 / 走廊 | `corridor.fbx` |
+| 功能性道具模型 | `functional_props.fbx` |
 
 实现 `audio/audio_feedback.gd`：
 
@@ -416,14 +429,14 @@ UI 内容：
 |---|---|---|
 | A 的事件随机触发还没完成 | B 无法等真实攻击调交互 | 用 `EventManager.trigger_window_attack(...)` 和 `EventManager.trigger_candle_extinguish(...)` 做调试按钮 |
 | C 的正式场景还没稳定 | 节点路径会变 | B 先在 mock 场景或临时主场景里按 ID 写脚本，最终只替换节点引用 |
-| 船头房间 ID 不一致 | 修锚按钮/相机切换出错 | 正式统一 `bow_room`，旧 `room_bow` 只做兼容 |
+| 走廊房间 ID 不一致 | 修锚按钮/相机切换出错 | 内部统一 `bow_room`，旧 `room_bow` 只做兼容 |
 | Web 音频播放受限制 | 首次进入无声 | 主界面“开始游戏”点击后再启动音频系统 |
 | 时间不够做特写 | 交互反馈弱 | 先做 hover/选中高亮 + 屏幕读条，特写放 P2 |
 
 ## 9. 程序 B 最终验收清单
 
 - 从主界面点击“开始游戏”进入游戏。
-- 可以在房间 A、房间 B、船头房间之间切换。
+- 可以在驾驶室、休息室、走廊之间切换。
 - 长按锚装置会推进锚修理进度。
 - 锚修满后出现胜利界面。
 - 窗户被攻击时，玩家可长按修窗并恢复耐久。

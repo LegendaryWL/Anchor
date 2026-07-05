@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/bridge.fbx" id="1_bridge"]
+[ext_resource type="PackedScene" path="res://assets/models/rest_room.fbx" id="2_rest_room"]
+[ext_resource type="PackedScene" path="res://assets/models/corridor.fbx" id="3_corridor"]
+[ext_resource type="PackedScene" path="res://assets/models/functional_props.fbx" id="4_props"]
+
+[node name="NewRoomAssetsPreview" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 0, 10, 0)
+light_energy = 2.2
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 10, 18)
+current = true
+
+[node name="Bridge" parent="." instance=ExtResource("1_bridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
+
+[node name="BridgeLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, -2)
+text = "bridge.fbx / 驾驶室"
+
+[node name="RestRoom" parent="." instance=ExtResource("2_rest_room")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
+
+[node name="RestRoomLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4, -2)
+text = "rest_room.fbx / 休息室"
+
+[node name="Corridor" parent="." instance=ExtResource("3_corridor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="CorridorLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 4, -2)
+text = "corridor.fbx / 走廊"
+
+[node name="FunctionalProps" parent="." instance=ExtResource("4_props")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+
+[node name="FunctionalPropsLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, -2)
+text = "functional_props.fbx / 功能性道具"

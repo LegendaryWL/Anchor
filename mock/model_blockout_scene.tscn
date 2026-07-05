@@ -1,0 +1,94 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/gamejam_map.fbx" id="1_map"]
+[ext_resource type="PackedScene" path="res://assets/models/ship_mountain_blockout.fbx" id="2_ship"]
+[ext_resource type="PackedScene" path="res://assets/models/candle_window_board_blockout.fbx" id="3_props"]
+[ext_resource type="PackedScene" path="res://assets/models/black_hand_3frame_blockout.fbx" id="4_hand"]
+[ext_resource type="ArrayMesh" path="res://assets/models/room_items.obj" id="5_room_items"]
+
+[sub_resource type="StandardMaterial3D" id="BridgeFloorMaterial"]
+albedo_color = Color(0.18, 0.26, 0.32, 1)
+
+[sub_resource type="StandardMaterial3D" id="RestRoomFloorMaterial"]
+albedo_color = Color(0.32, 0.24, 0.22, 1)
+
+[sub_resource type="StandardMaterial3D" id="CorridorFloorMaterial"]
+albedo_color = Color(0.22, 0.23, 0.25, 1)
+
+[sub_resource type="BoxMesh" id="RoomFloorMesh"]
+size = Vector3(4, 0.05, 3.5)
+
+[sub_resource type="BoxMesh" id="CorridorFloorMesh"]
+size = Vector3(4, 0.05, 7)
+
+[node name="ModelBlockoutScene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 0, 8, 0)
+light_energy = 2.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 7, 13)
+current = true
+
+[node name="BridgeRoom" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 0)
+
+[node name="Floor" type="MeshInstance3D" parent="BridgeRoom"]
+mesh = SubResource("RoomFloorMesh")
+surface_material_override/0 = SubResource("BridgeFloorMaterial")
+
+[node name="RoomLabel" type="Label3D" parent="BridgeRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, -1.35)
+text = "room_a / 驾驶室"
+
+[node name="BridgeRoomItems" type="MeshInstance3D" parent="BridgeRoom"]
+transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 9.83, -3.23, 1.86)
+mesh = ExtResource("5_room_items")
+
+[node name="BridgeWindowCandles" parent="BridgeRoom" instance=ExtResource("3_props")]
+transform = Transform3D(65, 0, 0, 0, 65, 0, 0, 0, 65, -1.25, 0.35, -0.85)
+
+[node name="BridgeShipReference" parent="BridgeRoom" instance=ExtResource("2_ship")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 1.25, 0.35, -1.1)
+
+[node name="RestRoom" type="Node3D" parent="."]
+
+[node name="Floor" type="MeshInstance3D" parent="RestRoom"]
+mesh = SubResource("RoomFloorMesh")
+surface_material_override/0 = SubResource("RestRoomFloorMaterial")
+
+[node name="RoomLabel" type="Label3D" parent="RestRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, -1.35)
+text = "room_b / 休息室"
+
+[node name="RestRoomWindowCandlesLeft" parent="RestRoom" instance=ExtResource("3_props")]
+transform = Transform3D(70, 0, 0, 0, 70, 0, 0, 0, 70, -1.0, 0.35, -0.75)
+
+[node name="RestRoomWindowCandlesRight" parent="RestRoom" instance=ExtResource("3_props")]
+transform = Transform3D(70, 0, 0, 0, 70, 0, 0, 0, 70, 1.0, 0.35, -0.75)
+
+[node name="BlackHandOverCandle" parent="RestRoom" instance=ExtResource("4_hand")]
+transform = Transform3D(38, 0, 0, 0, 38, 0, 0, 0, 38, 0.0, 1.2, -0.75)
+
+[node name="CorridorRoom" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Floor" type="MeshInstance3D" parent="CorridorRoom"]
+mesh = SubResource("CorridorFloorMesh")
+surface_material_override/0 = SubResource("CorridorFloorMaterial")
+
+[node name="RoomLabel" type="Label3D" parent="CorridorRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, -2.8)
+text = "bow_room / 走廊"
+
+[node name="CorridorMapReference" parent="CorridorRoom" instance=ExtResource("1_map")]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, -0.8, 0.35, -1.5)
+
+[node name="CorridorSpareWindowCandles" parent="CorridorRoom" instance=ExtResource("3_props")]
+transform = Transform3D(55, 0, 0, 0, 55, 0, 0, 0, 55, 0.9, 0.35, 1.65)
+
+[node name="CorridorShipReference" parent="CorridorRoom" instance=ExtResource("2_ship")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 1.0, 0.25, -1.8)
