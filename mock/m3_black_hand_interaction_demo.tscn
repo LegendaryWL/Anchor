@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://m3blackhandinteractiondemo"]
+[gd_scene format=3 uid="uid://dm1lfjs4m8i0e"]
 
 [ext_resource type="Script" path="res://mock/m3_black_hand_interaction_driver.gd" id="1_driver"]
 [ext_resource type="Script" path="res://interaction/click_spam_interaction.gd" id="2_click"]

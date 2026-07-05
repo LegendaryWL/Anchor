@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://m4huddemo"]
+[gd_scene format=3 uid="uid://m4huddemo"]
 
 [ext_resource type="Script" path="res://mock/m4_hud_demo_driver.gd" id="1_driver"]
 [ext_resource type="Script" path="res://ui/hud.gd" id="2_hud"]

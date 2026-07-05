@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://m2holdinteractiondemo"]
+[gd_scene format=3 uid="uid://gf067650aoxi"]
 
 [ext_resource type="Script" path="res://mock/m2_hold_interaction_driver.gd" id="1_driver"]
 [ext_resource type="Script" path="res://interaction/hold_interaction.gd" id="2_hold"]

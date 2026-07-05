@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://interactiontargetdemo"]
+[gd_scene format=3 uid="uid://ydov1iwaixxu"]
 
 [ext_resource type="Script" path="res://mock/interaction_target_demo_driver.gd" id="1_driver"]
 [ext_resource type="Script" path="res://interaction/interaction_target.gd" id="2_target"]

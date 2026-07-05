@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://m6audiofeedbackdemo"]
+[gd_scene format=3 uid="uid://mavxgrroentu"]
 
 [ext_resource type="Script" path="res://mock/m6_audio_feedback_demo_driver.gd" id="1_driver"]
 [ext_resource type="Script" path="res://audio/audio_feedback.gd" id="2_audio"]

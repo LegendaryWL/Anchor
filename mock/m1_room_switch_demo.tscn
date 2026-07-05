@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://m1roomswitchdemo"]
+[gd_scene format=3 uid="uid://ben1wm58pevby"]
 
 [ext_resource type="Script" path="res://mock/m1_room_switch_driver.gd" id="1_driver"]
 [ext_resource type="Script" path="res://interaction/room_switcher.gd" id="2_switcher"]
