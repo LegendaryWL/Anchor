@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://d0nhcl8fio4vp"]
 
 [ext_resource type="Script" uid="uid://bqyytf6c40m8n" path="res://scenes/camera_switcher.gd" id="1_sugp2"]
+[ext_resource type="PackedScene" uid="uid://csoia4m2brsqt" path="res://assets/models/走廊11.fbx" id="2_eb6dy"]
 [ext_resource type="PackedScene" uid="uid://2vsgjc6oml88" path="res://assets/models/蜡烛、窗户和木板白模.fbx" id="2_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://btt6kd64512hs" path="res://assets/models/休息室.fbx" id="2_tipki"]
 [ext_resource type="PackedScene" uid="uid://dfjvitgpfk3lq" path="res://assets/models/走廊.fbx" id="3_85g3d"]
@@ -9,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://5v13ch6q4m7p" path="res://assets/models/2026 ciga gamejam三个地图场景模型.fbx" id="4_choun"]
 [ext_resource type="PackedScene" uid="uid://j4np2h0kxscl" path="res://assets/models/map_blockout/zoulang.fbx" id="4_tefeu"]
 [ext_resource type="PackedScene" uid="uid://br6ptytcc3pex" path="res://assets/models/map_blockout/xiuxishi.fbx" id="5_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://cp6qp4ix36ynp" path="res://assets/models/驾驶室11.fbx" id="11_trceg"]
+[ext_resource type="PackedScene" uid="uid://dx5rdaqce11lu" path="res://assets/models/休息室11.fbx" id="12_a8y0u"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6k4ir"]
 resource_name = "三大地图场景"
@@ -156,11 +159,16 @@ script = ExtResource("1_sugp2")
 
 [node name="Environments" type="Node3D" parent="World" unique_id=1229302700]
 
+[node name="走廊11" parent="World/Environments" unique_id=1118237054 instance=ExtResource("2_eb6dy")]
+
 [node name="休息室" parent="World/Environments" unique_id=1976547243 instance=ExtResource("2_tipki")]
+visible = false
 
 [node name="驾驶室" parent="World/Environments" unique_id=1372772714 instance=ExtResource("3_choun")]
+visible = false
 
 [node name="走廊" parent="World/Environments" unique_id=194470338 instance=ExtResource("3_85g3d")]
+visible = false
 
 [node name="2026 ciga gamejam三个地图场景模型" parent="World/Environments" unique_id=1795668102 instance=ExtResource("4_choun")]
 visible = false
@@ -208,6 +216,11 @@ visible = false
 [node name="xiuxishi" parent="World/Environments" unique_id=636572259 instance=ExtResource("5_o6xl0")]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4.455, -0.125, -14.445)
 visible = false
+
+[node name="驾驶室11" parent="World/Environments" unique_id=1600303668 instance=ExtResource("11_trceg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="休息室11" parent="World/Environments" unique_id=15091594 instance=ExtResource("12_a8y0u")]
 
 [node name="Rooms" type="Node3D" parent="World" unique_id=84225231]
 visible = false
