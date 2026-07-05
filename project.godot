@@ -18,6 +18,9 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameManager="*res://autoload/game_manager.gd"
+RoomStateManager="*res://autoload/room_state_manager.gd"
+GameProcessManager="*res://autoload/game_process_manager.gd"
+EventManager="*res://autoload/event_manager.gd"
 
 [display]
 
