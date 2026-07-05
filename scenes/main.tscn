@@ -2,9 +2,52 @@
 
 [ext_resource type="Script" uid="uid://bqyytf6c40m8n" path="res://scenes/camera_switcher.gd" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://2vsgjc6oml88" path="res://assets/models/蜡烛、窗户和木板白模.fbx" id="2_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://btt6kd64512hs" path="res://assets/models/休息室.fbx" id="2_tipki"]
+[ext_resource type="PackedScene" uid="uid://dfjvitgpfk3lq" path="res://assets/models/走廊.fbx" id="3_85g3d"]
+[ext_resource type="PackedScene" uid="uid://bbw5yblrfaof3" path="res://assets/models/驾驶室.fbx" id="3_choun"]
 [ext_resource type="PackedScene" uid="uid://s7xlc7mhh5tw" path="res://assets/models/map_blockout/jiashishi.fbx" id="3_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://5v13ch6q4m7p" path="res://assets/models/2026 ciga gamejam三个地图场景模型.fbx" id="4_choun"]
 [ext_resource type="PackedScene" uid="uid://j4np2h0kxscl" path="res://assets/models/map_blockout/zoulang.fbx" id="4_tefeu"]
 [ext_resource type="PackedScene" uid="uid://br6ptytcc3pex" path="res://assets/models/map_blockout/xiuxishi.fbx" id="5_o6xl0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6k4ir"]
+resource_name = "三大地图场景"
+vertex_color_use_as_albedo = true
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_xwnws"]
+_surfaces = [{
+"aabb": AABB(-0.01, -0.01, -0.01, 0.02, 0.02, 0.02),
+"format": 34359742465,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgADAAAAAQAAAAQABAAAAAMABQACAAEAAwACAAUABAAGAAEAAQAGAAUAAwAHAAQABgAEAAcABQAHAAMABwAFAAYA"),
+"name": "三大地图场景",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("CtcjvArXIzwK1yM8CtcjvArXI7wK1yM8CtcjvArXI7wK1yO8CtcjvArXIzwK1yO8CtcjPArXIzwK1yM8CtcjPArXI7wK1yO8CtcjPArXI7wK1yM8CtcjPArXIzwK1yO8")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_sc62o"]
+resource_name = "立方体_090"
+_surfaces = [{
+"aabb": AABB(-0.01, -0.01, -0.01, 0.02, 0.02, 0.02),
+"attribute_data": PackedByteArray("4N/PPmIVJz9mGWM+YhUnP2YZYz60yks/4N/PPrTKSz/693w+U69MPx3sgz5Tr0w/HeyDPmRnTz/693w+ZGdPP2YZYz5iFSc/4N/PPmIVJz/g388+tMpLP2YZYz60yks/toF8PmRnTz92oXE+ZGdPP3ahcT5Tr0w/toF8PlOvTD91kok+o2ZPP1UihD6jZk8/VSKEPpSuTD91kok+lK5MP3YXcT5Tr0w/dhdxPmRnTz86N2Y+ZGdPPzo3Zj5Tr0w/"),
+"format": 34359742487,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgADAAAABAAFAAYABgAHAAQACAAJAAoACgALAAgADAANAA4ADgAPAAwAEAARABIAEgATABAAFAAVABYAFgAXABQA"),
+"material": SubResource("StandardMaterial3D_6k4ir"),
+"name": "三大地图场景",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("CtcjvArXIzwK1yM8CtcjvArXI7wK1yM8CtcjvArXI7wK1yO8CtcjvArXIzwK1yO8CtcjPArXIzwK1yM8CtcjvArXIzwK1yM8CtcjvArXIzwK1yO8CtcjPArXIzwK1yO8CtcjPArXI7wK1yM8CtcjPArXIzwK1yM8CtcjPArXIzwK1yO8CtcjPArXI7wK1yO8CtcjvArXI7wK1yM8CtcjPArXI7wK1yM8CtcjPArXI7wK1yO8CtcjvArXI7wK1yO8CtcjPArXI7wK1yO8CtcjPArXIzwK1yO8CtcjvArXIzwK1yO8CtcjvArXI7wK1yO8CtcjvArXI7wK1yM8CtcjvArXIzwK1yM8CtcjPArXIzwK1yM8CtcjPArXI7wK1yM8AAD/f/9/AAAAAP9//38AAAAA/3//fwAAAAD/f/9/AAD/f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v////3//f///////f/9///////9//3///////3//f////38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7///////38AgP//////fwCA//////9/AID//////38AgP9//38AAP+//3//fwAA/7//f/9/AAD/v/9//38AAP+/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_xwnws")
 
 [sub_resource type="BoxMesh" id="BoxMesh_5epwh"]
 
@@ -113,6 +156,26 @@ script = ExtResource("1_sugp2")
 
 [node name="Environments" type="Node3D" parent="World" unique_id=1229302700]
 
+[node name="休息室" parent="World/Environments" unique_id=1976547243 instance=ExtResource("2_tipki")]
+
+[node name="驾驶室" parent="World/Environments" unique_id=1372772714 instance=ExtResource("3_choun")]
+
+[node name="走廊" parent="World/Environments" unique_id=194470338 instance=ExtResource("3_85g3d")]
+
+[node name="2026 ciga gamejam三个地图场景模型" parent="World/Environments" unique_id=1795668102 instance=ExtResource("4_choun")]
+visible = false
+
+[node name="立方体_090" type="MeshInstance3D" parent="World/Environments/2026 ciga gamejam三个地图场景模型/door_pCube3_001" parent_id_path=PackedInt32Array(1795668102, 486832032) index="0" unique_id=1843431581]
+transform = Transform3D(1.7779126, 0, 0, 0, -1.658766e-06, 29.536448, 0, -37.948143, -1.2910791e-06, 56.22786, 1.2119821, 0.27141792)
+mesh = SubResource("ArrayMesh_sc62o")
+
+[node name="立方体_090" parent="World/Environments/2026 ciga gamejam三个地图场景模型" index="73" unique_id=2131809041]
+transform = Transform3D(1.7779126, 0, 0, 0, -1.658766e-06, 29.536448, 0, -37.948143, -1.2910791e-06, 56.22786, 0.2119821, 0.27141792)
+
+[node name="立方体_099" type="MeshInstance3D" parent="World/Environments/2026 ciga gamejam三个地图场景模型" unique_id=371070671]
+transform = Transform3D(3.1609733, 0, 0, 0, -1120.8534, -0.00023761453, 0, 0.00030528486, -1120.8534, 156.19608, 8.228702, -7.7729096)
+mesh = SubResource("ArrayMesh_sc62o")
+
 [node name="蜡烛、窗户和木板白模" parent="World/Environments" unique_id=208864751 instance=ExtResource("2_jyhfs")]
 visible = false
 
@@ -136,12 +199,15 @@ visible = false
 
 [node name="jiashishi" parent="World/Environments" unique_id=1885763698 instance=ExtResource("3_tbgi4")]
 transform = Transform3D(-100, 0, 8.742278e-06, 0, 100, 0, -8.742278e-06, 0, -100, 26.98, 0, 12.54)
+visible = false
 
 [node name="zoulang" parent="World/Environments" unique_id=1652394118 instance=ExtResource("4_tefeu")]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 11, 0, -1)
+visible = false
 
 [node name="xiuxishi" parent="World/Environments" unique_id=636572259 instance=ExtResource("5_o6xl0")]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4.455, -0.125, -14.445)
+visible = false
 
 [node name="Rooms" type="Node3D" parent="World" unique_id=84225231]
 visible = false
@@ -171,11 +237,11 @@ mesh = SubResource("BoxMesh_b1yhx")
 [node name="Windows" type="Node3D" parent="World/Rooms/RoomA" unique_id=708573164]
 
 [node name="window_room_a_0" type="MeshInstance3D" parent="World/Rooms/RoomA/Windows" unique_id=706230472]
-transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, -6.2, 1.5, -1.9)
+transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, 55.55, 0.266, 2.871)
 mesh = SubResource("BoxMesh_6yptn")
 
 [node name="window_room_a_1" type="MeshInstance3D" parent="World/Rooms/RoomA/Windows" unique_id=195269714]
-transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, -3.8, 1.5, -1.9)
+transform = Transform3D(0, 0, 0.4, 0, 0.6, 0, -0.05, 0, 0, 54.05, 0.266, 2.871)
 mesh = SubResource("BoxMesh_q2trj")
 
 [node name="Candles" type="Node3D" parent="World/Rooms/RoomA" unique_id=1499076479]
@@ -222,11 +288,11 @@ mesh = SubResource("BoxMesh_b1yhx")
 [node name="Windows" type="Node3D" parent="World/Rooms/RoomB" unique_id=2105821683]
 
 [node name="window_room_b_0" type="MeshInstance3D" parent="World/Rooms/RoomB/Windows" unique_id=39330985]
-transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, 3.8, 1.5, -1.9)
+transform = Transform3D(0, 0, 0.4, 0, 0.6, 0, -0.05, 0, 0, 55.06, 0.266, -3.28)
 mesh = SubResource("BoxMesh_6yptn")
 
 [node name="window_room_b_1" type="MeshInstance3D" parent="World/Rooms/RoomB/Windows" unique_id=290179682]
-transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, 6.2, 1.5, -1.9)
+transform = Transform3D(0.4, 0, 0, 0, 0.6, 0, 0, 0, 0.05, 53.56, 0.266, -3.28)
 mesh = SubResource("BoxMesh_q2trj")
 
 [node name="Candles" type="Node3D" parent="World/Rooms/RoomB" unique_id=979562258]
@@ -263,6 +329,12 @@ transform = Transform3D(0.1, 0, 0, 0, 3, 0, 0, 0, 4, 2, 1.5, -6)
 visible = false
 mesh = SubResource("BoxMesh_b1yhx")
 
+[node name="Windows" type="Node3D" parent="World/Rooms/BowRoom"]
+
+[node name="window_bow_room_0" type="MeshInstance3D" parent="World/Rooms/BowRoom/Windows"]
+transform = Transform3D(0, 0, 0.4, 0, 0.6, 0, -0.05, 0, 0, 55.05, 0.266, -1.63)
+mesh = SubResource("BoxMesh_6yptn")
+
 [node name="anchor_device" type="MeshInstance3D" parent="World/Rooms/BowRoom" unique_id=56991541]
 transform = Transform3D(0.8, 0, 0, 0, 0.6, 0, 0, 0, 0.8, 0, 0.6, -6)
 mesh = SubResource("BoxMesh_djjsb")
@@ -273,22 +345,26 @@ mesh = SubResource("BoxMesh_djjsb")
 transform = Transform3D(0.8660254, -0.35355338, 0.35355338, 0, 0.70710677, 0.70710677, -0.5, -0.6123724, 0.6123724, 0, 0, 0)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Lighting" unique_id=208932551]
-visible = false
 
 [node name="Cameras" type="Node3D" parent="." unique_id=465472595]
 
 [node name="camera_room_a" type="Camera3D" parent="Cameras" unique_id=1970832559]
-transform = Transform3D(0.70710677, -0.08249867, 0.7022777, 0, 0.9931707, 0.116670735, -0.70710677, -0.08249867, 0.7022777, 5, 5, -4)
-fov = 35.0
+transform = Transform3D(0.7313537, -0.07128823, 0.67826235, -3.9482067e-09, 0.994522, 0.10452844, -0.6819984, -0.07644727, 0.72734725, 56.15, 0.36, -2.54)
+fov = 40.0
+near = 0.01
 
 [node name="camera_room_b" type="Camera3D" parent="Cameras" unique_id=1296167417]
-transform = Transform3D(-0.6678325, -0.08683938, 0.7392284, 0, 0.9931707, 0.116670735, -0.7443116, 0.07791651, -0.66327167, 35, 5, 3)
-fov = 35.0
+transform = Transform3D(0.7313537, -0.07128823, 0.67826235, -3.948206e-09, 0.9945219, 0.10452844, -0.6819984, -0.07644726, 0.72734725, 55.895, 0.43, -0.93)
+fov = 40.0
 
 [node name="camera_bow" type="Camera3D" parent="Cameras" unique_id=1217198968]
-transform = Transform3D(0.99619466, 0, 0.08715573, 0, 1, 0, -0.08715573, 0, 0.99619466, 11, 5, 18)
-fov = 35.0
+transform = Transform3D(-0.43837112, -0.093949564, 0.8938704, 0, 0.9945219, 0.104528464, -0.89879405, 0.04582226, -0.43596968, 56.15, 0.36, 2.075)
+fov = 34.471004
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1482041362]
 
+[editable path="World/Environments/休息室"]
+[editable path="World/Environments/驾驶室"]
+[editable path="World/Environments/走廊"]
+[editable path="World/Environments/2026 ciga gamejam三个地图场景模型"]
 [editable path="World/Environments/蜡烛、窗户和木板白模"]
