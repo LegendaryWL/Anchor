@@ -195,11 +195,15 @@ window_room_a_0
 window_room_a_1
 window_room_b_0
 window_room_b_1
+window_bow_room_0 休息室方向视角
 
 candle_room_a_0
 candle_room_a_1
 candle_room_b_0
 candle_room_b_1
+candle_bow_room_0 船长室方向视角
+candle_bow_room_1 休息室方向视角
+
 
 anchor_device
 black_hand
@@ -221,7 +225,7 @@ get_snapshot() -> Dictionary
 ```gdscript
 signal san_changed(current: float, max_value: float)
 signal anchor_progress_changed(value: float)
-signal window_changed(window_id: String, durability: float, is_broken: bool)
+signal window_changed(window_id: String, durability: int, is_broken: bool)
 signal candle_changed(candle_id: String, lit: bool)
 signal phase_changed(phase: int)
 signal room_changed(room_id: String)
@@ -330,7 +334,7 @@ extends Node
 
 signal san_changed(current: float, max_value: float)
 signal anchor_progress_changed(value: float)
-signal window_changed(window_id: String, durability: float, is_broken: bool)
+signal window_changed(window_id: String, durability: int, is_broken: bool)
 signal candle_changed(candle_id: String, lit: bool)
 signal phase_changed(phase: int)
 signal room_changed(room_id: String)
@@ -675,22 +679,68 @@ http://localhost:8060/
 
 ---
 
-## 10. 数值建议
+## 10. 数值规范（与 `autoload/game_manager.gd` 一致）
+
+### 10.1 SAN
+
+| 项 | 值 | 说明 |
+|---|---|---|
+| 初始值 | `100` | 开局 `san = san_max = 100` |
+| Phase 1 上限 | `100` | 破窗前 |
+| Phase 2 上限 | `80` | 任一窗户破碎后 `san_max = 80`，当前 SAN 截断到上限 |
+| 胜利条件 | 锚进度满 | `anchor_progress >= anchor_target`（目标 60 秒） |
+| 失败条件 | SAN 归零 | `san <= 0` |
+
+**每帧变化（`_update_san`，可叠加）：**
+
+| 条件 | 公式 | 备注 |
+|---|---|---|
+| 全蜡烛点亮 | `san += delta * 1.5` | 6 根全亮才生效 |
+| Phase 1 窗户正被袭击 | `san -= delta * 1.0` | 仅 `active_attack.type == "window"` 时 |
+| Phase 2 有蜡烛熄灭 | `san -= delta * 5.0 * unlit_count` | `unlit_count` 为**全局**熄灭蜡烛数（含走廊两视角） |
+
+最终：`san = clamp(san, 0, san_max)`。
+
+### 10.2 窗户耐久
+
+| 项 | 值 | 说明 |
+|---|---|---|
+| 类型 | `int` | 信号 `window_changed` 的 `durability` 为整数 |
+| 上限 | `100` | `WINDOW_DURABILITY_MAX` |
+| 初始值 | `100` | 每扇窗开局满耐久 |
+| 破碎 | `durability <= 0` | 设 `broken = true`，触发进入 Phase 2 |
+
+**状态与耐久变化：**
+
+| 状态 | 公式 | 作用范围 |
+|---|---|---|
+| 正常 | 无被动衰减 | — |
+| 怪物袭击中 | `durability -= 5 * delta` | 仅 `active_attack` 指向的那扇窗 |
+| 全局时间 > 2min | `durability -= 8 * delta` | **所有**未碎窗户（被动衰减，与是否开启袭击无关） |
+| 袭击 + 超过 2min | 上两项叠加 | 被袭窗户合计 `-13 * delta` |
+| 玩家修补（按住） | `durability += 4 * delta` | 当前视角内、未碎、未满的窗；修满或化解袭击 |
+
+**时间与常量：**
+
+| 常量 | 值 |
+|---|---|
+| `game_time` | 从开局累计秒数，`reset_game()` 归零；`get_snapshot()` 含 `"game_time"` |
+| `GAME_TIME_PASSIVE_DECAY_SEC` | `120`（2 分钟） |
+| `WINDOW_ATTACK_RATE` | `5` |
+| `WINDOW_PASSIVE_DECAY_RATE` | `8` |
+| `WINDOW_REPAIR_RATE` | `4` |
+
+内部用小数余量 `_durability_frac` 累积帧间变化，对外展示的 `durability` 始终为整数。
+
+### 10.3 事件与其它建议值
 
 | 项 | 建议值 |
 |---|---|
-| SAN 初始值 | 100 |
-| SAN Phase 2 上限 | 80 |
-| 锚修理目标 | 45-60 秒 |
-| 窗户耐久 | 100 |
-| 怪物破窗 | `-5 * delta` |
-| 修窗 | `+4 * delta` |
-| 全蜡烛亮 SAN 回复 | `+1.5 * delta` |
-| Phase 1 被攻击 SAN 损耗 | `-1 * delta` |
-| Phase 2 有蜡烛灭 SAN 损耗 | `-5 * delta` |
-| Phase 1 攻击持续 | 8-15 秒 |
+| 锚修理目标 | 60 秒（试玩太难可改为 45） |
+| Phase 1 袭击持续 | 8–15 秒（随机） |
+| 袭击间隔 | 6–12 秒（随机） |
 | Phase 2 黑手掐灭倒计时 | 15 秒 |
-| 驱赶黑手点击次数 | 5-8 次 |
+| 驱赶黑手点击次数 | 5–8 次 |
 
 如果试玩太难，先把锚修理目标改成 45 秒。
 
