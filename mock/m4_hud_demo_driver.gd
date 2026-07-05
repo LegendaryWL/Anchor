@@ -80,13 +80,13 @@ func _run_headless_checks() -> void:
 
 	_check("initial san bar", _san_bar.value, 100.0)
 	_check("initial repair bar", _repair_bar.value, 0.0)
-	_check("initial room label", _room_label.text, "当前位置：房间 A")
+	_check("initial room label", _room_label.text, "当前位置：驾驶室")
 
 	GameProcessManager.add_repair_time(12.0)
 	_check("repair bar follows signal", _repair_bar.value, 12.0)
 
 	_room_b_button.pressed.emit()
-	_check("room label updates", _room_label.text, "当前位置：房间 B")
+	_check("room label updates", _room_label.text, "当前位置：休息室")
 
 	RoomStateManager.set_window_durability("window_room_b_0", 64)
 	_check_contains("window status follows current room", _window_label.text, "window_room_b_0：64 / 100")

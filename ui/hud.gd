@@ -226,11 +226,11 @@ func _get_room_id_from_target(target_id: String, prefix: String) -> String:
 func _room_name(room_id: String) -> String:
 	match room_id:
 		"room_a":
-			return "房间 A"
+			return "驾驶室"
 		"room_b":
-			return "房间 B"
+			return "休息室"
 		"room_bow", "bow_room":
-			return "船头"
+			return "走廊"
 		_:
 			return room_id
 
