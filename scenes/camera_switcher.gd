@@ -4,19 +4,96 @@ extends Node3D
 @onready var camera_room_b: Camera3D = $Cameras/camera_room_b
 @onready var camera_bow: Camera3D = $Cameras/camera_bow
 
+const HEAD_TURN_STEP_DEGREES := 20.0
+const HEAD_TURN_LIMIT_DEGREES := 20.0
+const HEAD_TURN_SPEED_DEGREES := 80.0
+
+const ROOM_VIEW_CONFIGS := {
+	"room_a": [
+		{
+			"label": "front wall",
+			"position": Vector3(56.15, 0.36, -2.54),
+			"target": Vector3(55.509, 0.212, -3.288),
+		},
+		{
+			"label": "left wall",
+			"position": Vector3(56.1, 0.36, -2.72),
+			"target": Vector3(55.18, 0.212, -2.98),
+		},
+		{
+			"label": "door side",
+			"position": Vector3(55.98, 0.36, -2.96),
+			"target": Vector3(55.12, 0.212, -3.1),
+		},
+		{
+			"label": "right wall",
+			"position": Vector3(56.12, 0.36, -2.66),
+			"target": Vector3(55.82, 0.212, -3.68),
+		},
+	],
+	"room_b": [
+		{
+			"label": "front wall",
+			"position": Vector3(55.895, 0.43, -0.93),
+			"target": Vector3(55.542, 0.266, -1.387),
+		},
+		{
+			"label": "left wall",
+			"position": Vector3(55.87, 0.43, -0.96),
+			"target": Vector3(55.16, 0.266, -1.13),
+		},
+		{
+			"label": "door side",
+			"position": Vector3(55.895, 0.43, -0.93),
+			"target": Vector3(55.542, 0.266, -1.387),
+		},
+		{
+			"label": "right wall",
+			"position": Vector3(55.895, 0.43, -0.93),
+			"target": Vector3(55.542, 0.266, -1.387),
+		},
+	],
+	"bow_room": [
+		{
+			"label": "front wall",
+			"position": Vector3(55.98, 0.36, 2.22),
+			"target": Vector3(55.42, 0.214, 2.15),
+		},
+		{
+			"label": "left wall",
+			"position": Vector3(55.98, 0.36, 2.22),
+			"target": Vector3(55.42, 0.214, 2.15),
+		},
+		{
+			"label": "door side",
+			"position": Vector3(55.98, 0.36, 2.22),
+			"target": Vector3(55.4, 0.214, 2.62),
+		},
+		{
+			"label": "right wall",
+			"position": Vector3(55.98, 0.36, 2.22),
+			"target": Vector3(55.4, 0.214, 2.62),
+		},
+	],
+}
+
 var current_room := ""
-var _last_key_room := ""
 var _hud_label: Label
 var _message := ""
+var _room_cameras: Dictionary = {}
+var _camera_turn_steps: Dictionary = {}
+var _head_turn_current_radians := 0.0
+var _head_turn_target_radians := 0.0
 
 func _ready() -> void:
+	_setup_room_cameras()
 	_setup_temp_hud()
 	if _gm() != null:
 		_gm().call("reset_game")
 		_gm().call("set_attacks_enabled", true)
 		if not _gm().is_connected("game_over", Callable(self, "_on_game_over")):
 			_gm().connect("game_over", Callable(self, "_on_game_over"))
-	print("Playable temp controller ready. 1/2/3 switch, hold Q anchor, hold W window, E candle, Space black hand.")
+	print("Playable temp controller ready. 1/2/3 switch rooms, Left/Right switch fixed room views, A/D turn head, hold Q anchor, hold W window, E candle, Space black hand.")
 	switch_camera("room_a", true)
 
 func _input(event: InputEvent) -> void:
@@ -26,7 +103,12 @@ func _input(event: InputEvent) -> void:
 		if room_id == "":
 			room_id = _room_from_key(key_event.physical_keycode)
 		if room_id != "":
-			switch_camera(room_id)
+			switch_camera(room_id, true)
+			return
+
+		if _handle_turn_key(key_event.keycode):
+			return
+		if _handle_turn_key(key_event.physical_keycode):
 			return
 
 		match key_event.keycode:
@@ -46,26 +128,9 @@ func _input(event: InputEvent) -> void:
 				_message = "Game reset"
 
 func _process(delta: float) -> void:
-	_poll_room_keys()
+	_update_head_turn(delta)
 	_poll_hold_actions(delta)
 	_update_temp_hud()
-
-func _poll_room_keys() -> void:
-	var room_id := ""
-	if Input.is_physical_key_pressed(KEY_1) or Input.is_physical_key_pressed(KEY_KP_1) or Input.is_physical_key_pressed(KEY_LEFT):
-		room_id = "room_a"
-	elif Input.is_physical_key_pressed(KEY_2) or Input.is_physical_key_pressed(KEY_KP_2) or Input.is_physical_key_pressed(KEY_RIGHT):
-		room_id = "room_b"
-	elif Input.is_physical_key_pressed(KEY_3) or Input.is_physical_key_pressed(KEY_KP_3) or Input.is_physical_key_pressed(KEY_UP):
-		room_id = "bow_room"
-
-	if room_id == "":
-		_last_key_room = ""
-		return
-
-	if room_id != _last_key_room:
-		_last_key_room = room_id
-		switch_camera(room_id)
 
 func _poll_hold_actions(delta: float) -> void:
 	if bool(_gm().get("is_game_over")):
@@ -86,30 +151,133 @@ func _poll_hold_actions(delta: float) -> void:
 
 func _room_from_key(keycode: Key) -> String:
 	match keycode:
-		KEY_1, KEY_KP_1, KEY_LEFT:
+		KEY_1, KEY_KP_1:
 			return "room_a"
-		KEY_2, KEY_KP_2, KEY_RIGHT:
+		KEY_2, KEY_KP_2:
 			return "room_b"
-		KEY_3, KEY_KP_3, KEY_UP:
+		KEY_3, KEY_KP_3:
 			return "bow_room"
 		_:
 			return ""
+
+func _handle_turn_key(keycode: Key) -> bool:
+	match keycode:
+		KEY_LEFT:
+			_turn_current_view(1)
+			return true
+		KEY_RIGHT:
+			_turn_current_view(-1)
+			return true
+		KEY_A:
+			_adjust_head_turn(HEAD_TURN_STEP_DEGREES)
+			return true
+		KEY_D:
+			_adjust_head_turn(-HEAD_TURN_STEP_DEGREES)
+			return true
+		KEY_UP, KEY_DOWN:
+			return true
+		_:
+			return false
 
 func switch_camera(room_id: String, force: bool = false) -> void:
 	if not force and current_room == room_id:
 		return
 	current_room = room_id
+	_reset_view_turn(room_id)
 
-	match room_id:
-		"room_a":
-			camera_room_a.make_current()
-		"room_b":
-			camera_room_b.make_current()
-		"bow_room":
-			camera_bow.make_current()
+	var camera := _camera_for_room(room_id)
+	if camera != null:
+		camera.make_current()
 
 	_sync_game_room(room_id)
 	print("switch_camera -> ", room_id)
+
+func _setup_room_cameras() -> void:
+	_room_cameras = {
+		"room_a": camera_room_a,
+		"room_b": camera_room_b,
+		"bow_room": camera_bow,
+	}
+
+	for room_id in _room_cameras.keys():
+		var camera: Camera3D = _camera_for_room(room_id)
+		if camera == null:
+			continue
+		_camera_turn_steps[room_id] = 0
+
+func _camera_for_room(room_id: String) -> Camera3D:
+	return _room_cameras.get(room_id, null) as Camera3D
+
+func _turn_current_view(step_delta: int) -> void:
+	if current_room.is_empty():
+		return
+
+	var room_views: Array = ROOM_VIEW_CONFIGS.get(current_room, []) as Array
+	if room_views.is_empty():
+		return
+
+	var step: int = int(_camera_turn_steps.get(current_room, 0))
+	step = wrapi(step + step_delta, 0, room_views.size())
+	_camera_turn_steps[current_room] = step
+	_reset_head_turn()
+	_apply_view_turn(current_room)
+	_message = "View: " + _view_name_from_step(step)
+
+func _reset_view_turn(room_id: String) -> void:
+	_camera_turn_steps[room_id] = 0
+	_reset_head_turn()
+	_apply_view_turn(room_id)
+	_message = "View: front wall"
+
+func _apply_view_turn(room_id: String) -> void:
+	var camera := _camera_for_room(room_id)
+	if camera == null:
+		return
+
+	var room_views: Array = ROOM_VIEW_CONFIGS.get(room_id, []) as Array
+	if room_views.is_empty():
+		return
+
+	var step: int = int(_camera_turn_steps.get(room_id, 0))
+	step = clampi(step, 0, room_views.size() - 1)
+	var view: Dictionary = room_views[step] as Dictionary
+	_apply_camera_view(camera, view, _head_turn_current_radians)
+
+func _apply_camera_view(camera: Camera3D, view: Dictionary, head_turn_radians: float) -> void:
+	var view_position: Vector3 = view.get("position", camera.position)
+	var base_target: Vector3 = view.get("target", view_position + Vector3.FORWARD)
+	var look_direction := base_target - view_position
+	if look_direction.length_squared() <= 0.000001:
+		look_direction = Vector3.FORWARD
+	look_direction = look_direction.rotated(Vector3.UP, head_turn_radians)
+	camera.position = view_position
+	camera.look_at(view_position + look_direction, Vector3.UP)
+
+func _adjust_head_turn(delta_degrees: float) -> void:
+	var next_target_degrees := rad_to_deg(_head_turn_target_radians) + delta_degrees
+	next_target_degrees = clampf(next_target_degrees, -HEAD_TURN_LIMIT_DEGREES, HEAD_TURN_LIMIT_DEGREES)
+	_head_turn_target_radians = deg_to_rad(next_target_degrees)
+
+func _reset_head_turn() -> void:
+	_head_turn_current_radians = 0.0
+	_head_turn_target_radians = 0.0
+
+func _update_head_turn(delta: float) -> void:
+	if current_room.is_empty():
+		return
+	if is_equal_approx(_head_turn_current_radians, _head_turn_target_radians):
+		return
+
+	var turn_speed := deg_to_rad(HEAD_TURN_SPEED_DEGREES) * delta
+	_head_turn_current_radians = move_toward(_head_turn_current_radians, _head_turn_target_radians, turn_speed)
+	_apply_view_turn(current_room)
+
+func _view_name_from_step(step: int) -> String:
+	var room_views: Array = ROOM_VIEW_CONFIGS.get(current_room, []) as Array
+	if step < 0 or step >= room_views.size():
+		return "front wall"
+	var view: Dictionary = room_views[step] as Dictionary
+	return str(view.get("label", "front wall"))
 
 func _sync_game_room(room_id: String) -> void:
 	var view_id := room_id
@@ -184,7 +352,9 @@ func _update_temp_hud() -> void:
 
 	_hud_label.text = "\n".join([
 		"TEMP PLAYABLE BUILD",
-		"1/2/3: switch rooms | Hold Q: repair anchor | Hold W: repair window",
+		"1/2/3: switch rooms | Left/Right: switch fixed room views",
+		"A/D: turn head 20 deg | Up/Down: unbound",
+		"Hold Q: repair anchor | Hold W: repair window",
 		"E: light candle | Space: expel black hand | F: force attack | P: phase2 | R: reset",
 		"Room/View: %s / %s" % [snapshot.get("current_room_id", ""), snapshot.get("current_view_id", "")],
 		"SAN: %.0f / %.0f   Phase: %d" % [snapshot.get("san", 0.0), snapshot.get("san_max", 0.0), snapshot.get("phase", 0)],
