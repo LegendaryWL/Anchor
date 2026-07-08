@@ -39,14 +39,14 @@
 │   · SAN / 胜负判定             · 当前视角房间              │
 │   · 锚修理进度                 · 实体状态聚合              │
 └──────────────────────────▲──────────────────────────────┘
-                           │ 订阅状态变化 / 查询
+						   │ 订阅状态变化 / 查询
 ┌──────────────────────────┴──────────────────────────────┐
 │                      事件 (Event)                        │
 │   WindowAttackEvent          CandleExtinguishEvent      │
 │   · 发生 → 进行中 → 结束       · 发生 → 进行中 → 结束      │
 │   · 驱动 SAN / 耐久持续损耗     · 驱动 SAN 持续损耗         │
 └──────────────────────────▲──────────────────────────────┘
-                           │ 行为完成时发送消息
+						   │ 行为完成时发送消息
 ┌──────────────────────────┴──────────────────────────────┐
 │                      行为 (Behavior)                      │
 │  SwitchCamera · FixWindow · ExpelBlackHand              │
@@ -92,20 +92,20 @@
 
 ```mermaid
 sequenceDiagram
-    participant P as 玩家
-    participant B as 行为层
-    participant E as 事件层
-    participant G as 进程管理
+	participant P as 玩家
+	participant B as 行为层
+	participant E as 事件层
+	participant G as 进程管理
 
-    P->>B: 长按修理锚装置
-    B->>G: 上报修理进度
-    E->>G: 窗户被攻击 / 蜡烛被掐（持续扣 SAN）
-    P->>B: 查看监控 / 切换房间视角
-    B->>G: 切换当前房间
-    P->>B: 修窗 / 驱逐黑手 / 点蜡烛
-    B->>E: 发送「事件结束」消息
-    E->>G: 停止持续损耗，更新事件状态
-    G->>G: 判定阶段 / 胜负
+	P->>B: 长按修理锚装置
+	B->>G: 上报修理进度
+	E->>G: 窗户被攻击 / 蜡烛被掐（持续扣 SAN）
+	P->>B: 查看监控 / 切换房间视角
+	B->>G: 切换当前房间
+	P->>B: 修窗 / 驱逐黑手 / 点蜡烛
+	B->>E: 发送「事件结束」消息
+	E->>G: 停止持续损耗，更新事件状态
+	G->>G: 判定阶段 / 胜负
 ```
 
 ---
@@ -189,8 +189,8 @@ class_name BehaviorBase
 
 ```
 Idle → Triggered → Active → Resolved / Failed
-         ↑                    ↑
-    怪物发起攻击          玩家行为发送消息
+		 ↑                    ↑
+	怪物发起攻击          玩家行为发送消息
 ```
 
 ### 6.1 事件基类
@@ -292,9 +292,9 @@ func tick(delta: float) -> void  # Active 状态下每帧调用
 ```gdscript
 # 伪代码
 func on_window_durability_changed(window):
-    if window.durability <= 0 and game_phase == PHASE_1:
-        GameProcessManager.enter_phase_2()
-        GameProcessManager.set_san_max(80)
+	if window.durability <= 0 and game_phase == PHASE_1:
+		GameProcessManager.enter_phase_2()
+		GameProcessManager.set_san_max(80)
 ```
 
 ---
@@ -387,7 +387,7 @@ res://
 ├── data/
 │   └── default_room_layout.tres
 └── docs/
-    └── DESIGN.md
+	└── DESIGN.md
 ```
 
 ---

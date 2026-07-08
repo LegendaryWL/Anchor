@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://cxneep62njbq5"]
+
+[ext_resource type="Texture2D" uid="uid://dc75b4n3ks3xw" path="res://assets/image/begin_background.png" id="1_bqqt6"]
+[ext_resource type="Texture2D" uid="uid://eoceuqcw7uy" path="res://assets/image/标题.png" id="2_wu84c"]
+[ext_resource type="FontFile" uid="uid://bl2vn76h5jpvx" path="res://assets/fonts/ChangBanDianSong-12.ttf" id="4_rtw2f"]
+[ext_resource type="AudioStream" uid="uid://vdxsq65x3g8o" path="res://audio/assets/opening_A_Turn_for_the_Worse.mp3" id="5_rtw2f"]
+[ext_resource type="Script" uid="uid://bhv8yv300l4kq" path="res://scenes/main_menu.gd" id="7_menug"]
+
+[node name="MainMenu" type="Control" unique_id=2068463924]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_menug")
+
+[node name="BGTextureRect" type="TextureRect" parent="." unique_id=1946826285]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("1_bqqt6")
+expand_mode = 1
+
+[node name="TitleTextureRect" type="TextureRect" parent="." unique_id=1336585197]
+layout_mode = 0
+offset_left = 83.0
+offset_top = 108.0
+offset_right = 489.0
+offset_bottom = 225.0
+texture = ExtResource("2_wu84c")
+expand_mode = 1
+
+[node name="StartButton" type="Button" parent="." unique_id=1050783849]
+layout_mode = 0
+offset_left = 182.0
+offset_top = 292.0
+offset_right = 377.0
+offset_bottom = 360.0
+theme_override_fonts/font = ExtResource("4_rtw2f")
+theme_override_font_sizes/font_size = 30
+text = "开始游戏"
+expand_icon = true
+
+[node name="GuideButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 182.0
+offset_top = 374.0
+offset_right = 377.0
+offset_bottom = 442.0
+theme_override_fonts/font = ExtResource("4_rtw2f")
+theme_override_font_sizes/font_size = 30
+text = "操作指南"
+expand_icon = true
+
+[node name="ExitButton" type="Button" parent="." unique_id=12360447]
+layout_mode = 0
+offset_left = 182.0
+offset_top = 456.0
+offset_right = 377.0
+offset_bottom = 524.0
+theme_override_fonts/font = ExtResource("4_rtw2f")
+theme_override_font_sizes/font_size = 30
+text = "退出"
+expand_icon = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=360921411]
+stream = ExtResource("5_rtw2f")
+autoplay = true
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2093842461]
+visible = false
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0, 0, 0, 1)

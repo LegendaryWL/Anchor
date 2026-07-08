@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://c43p58tu4xc3"]
+
+[ext_resource type="FontFile" uid="uid://bl2vn76h5jpvx" path="res://assets/fonts/ChangBanDianSong-12.ttf" id="1_p0i5n"]
+
+[node name="End1" type="Control" unique_id=2052660095]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1398315536]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="ColorRect" unique_id=635534581]
+layout_mode = 0
+offset_left = -21.0
+offset_top = 290.0
+offset_right = 1179.0
+offset_bottom = 466.0
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("1_p0i5n")
+theme_override_font_sizes/font_size = 24
+text = "锚一归位，我就恢复了平静。我筋疲力尽，扑倒在小床上。
+想必我睡着了，因为醒来时满脸映着星光。"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="ColorRect" unique_id=524893409]
+layout_mode = 0
+offset_left = 435.0
+offset_top = 153.0
+offset_right = 695.0
+offset_bottom = 251.0
+theme_override_colors/font_color = Color(0.34487036, 0.7526588, 0.15047714, 1)
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("1_p0i5n")
+theme_override_font_sizes/font_size = 65
+text = "平安启航"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TransitionColorRect" type="ColorRect" parent="." unique_id=1397864548]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)

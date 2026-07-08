@@ -35,10 +35,3 @@ func tick(delta: float) -> void:
 func on_behavior_message(msg: BehaviorMessage) -> void:
 	if state != State.ACTIVE:
 		return
-	if not msg.resolved:
-		return
-	if msg.type != "fix_window":
-		return
-	if msg.target_id != target_id:
-		return
-	_set_state(State.RESOLVED)

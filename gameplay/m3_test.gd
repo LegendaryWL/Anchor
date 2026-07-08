@@ -34,7 +34,7 @@ func _ready() -> void:
 	print("========== M3 自动验收开始 ==========")
 	await _run_random_attack_test()
 	await _run_attack_damage_test()
-	await _run_repair_resolves_test()
+	await _run_repair_continues_test()
 	await _run_san_drain_test()
 	await _run_skip_broken_window_test()
 	await _run_break_clears_attack_test()
@@ -120,14 +120,14 @@ func _run_attack_damage_test() -> void:
 	print_snapshot("M3-B")
 
 
-func _run_repair_resolves_test() -> void:
-	print("\n--- M3-C: 修窗化解袭击 ---")
+func _run_repair_continues_test() -> void:
+	print("\n--- M3-C: 修窗时袭击继续 ---")
 	_reset_for_m3()
 	check("M3-C force attack", GameManager.force_window_attack(ATTACK_TARGET, 12.0), true)
 	check("M3-C under attack", GameManager.is_window_under_attack(ATTACK_TARGET), true)
-	check("M3-C repair resolves", GameManager.repair_window(ATTACK_TARGET, 1.0), true)
-	check("M3-C attack cleared", GameManager.active_attack.is_empty(), true)
-	check("M3-C resolved signal", _last_attack_resolved, ATTACK_TARGET)
+	check("M3-C repair while attacked", GameManager.repair_window(ATTACK_TARGET, 1.0), true)
+	check("M3-C attack still active", GameManager.is_window_under_attack(ATTACK_TARGET), true)
+	check("M3-C no resolved signal", _last_attack_resolved, "")
 	print_snapshot("M3-C")
 
 

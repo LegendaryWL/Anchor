@@ -5,6 +5,7 @@ signal anchor_progress_changed(value: float)
 signal window_changed(window_id: String, durability: int, is_broken: bool)
 signal candle_changed(candle_id: String, lit: bool)
 signal phase_changed(phase: int)
+signal phase1_ended(broken_window_id: String)
 signal room_changed(room_id: String)
 signal attack_started(target_id: String, attack_type: String)
 signal attack_resolved(target_id: String, attack_type: String)
@@ -14,17 +15,18 @@ signal game_over(result: String)
 const PHASE_WINDOW := 1
 const PHASE_CANDLE := 2
 const WINDOW_DURABILITY_MAX := 100
-const GAME_TIME_PASSIVE_DECAY_SEC := 120.0
-const WINDOW_REPAIR_RATE := 4.0
-const WINDOW_ATTACK_RATE := 5.0
-const WINDOW_PASSIVE_DECAY_RATE := 8.0
+const GAME_TIME_PASSIVE_DECAY_SEC := 60.0
+const WINDOW_REPAIR_RATE := 6.0
+const WINDOW_ATTACK_RATE := 6.0
+const WINDOW_PASSIVE_DECAY_RATE := 10.0
 const ATTACK_DURATION_MIN := 8.0
 const ATTACK_DURATION_MAX := 15.0
 const ATTACK_COOLDOWN_MIN := 6.0
 const ATTACK_COOLDOWN_MAX := 12.0
 const CANDLE_ATTACK_DURATION := 15.0
-const BLACK_HAND_EXPEL_MIN := 5
-const BLACK_HAND_EXPEL_MAX := 8
+const BLACK_HAND_EXPEL_MIN := 2
+const BLACK_HAND_EXPEL_MAX := 5
+const ANCHOR_REPAIR_ROOM_ID := "bow_room"
 
 var phase: int = PHASE_WINDOW
 var san: float = 100.0
@@ -42,17 +44,14 @@ var windows: Dictionary = {
 	"window_room_a_0": {"room": "room_a", "view": "room_a", "durability": 100, "broken": false},
 	"window_room_a_1": {"room": "room_a", "view": "room_a", "durability": 100, "broken": false},
 	"window_room_b_0": {"room": "room_b", "view": "room_b", "durability": 100, "broken": false},
-	"window_room_b_1": {"room": "room_b", "view": "room_b", "durability": 100, "broken": false},
 	"window_bow_room_0": {"room": "bow_room", "view": "bow_room_1", "durability": 100, "broken": false},
+	"window_bow_room_1": {"room": "bow_room", "view": "bow_room_1", "durability": 100, "broken": false},
 }
 
 var candles: Dictionary = {
 	"candle_room_a_0": {"room": "room_a", "view": "room_a", "lit": true},
-	"candle_room_a_1": {"room": "room_a", "view": "room_a", "lit": true},
 	"candle_room_b_0": {"room": "room_b", "view": "room_b", "lit": true},
-	"candle_room_b_1": {"room": "room_b", "view": "room_b", "lit": true},
-	"candle_bow_room_0": {"room": "bow_room", "view": "bow_room_0", "lit": true},
-	"candle_bow_room_1": {"room": "bow_room", "view": "bow_room_1", "lit": true},
+	"candle_bow_room_0": {"room": "bow_room", "view": "bow_room_1", "lit": true},
 }
 
 var active_attack: Dictionary = {}
@@ -71,11 +70,16 @@ func _process(delta: float) -> void:
 	_check_game_over()
 
 
-func repair_anchor(delta: float) -> void:
-	if is_game_over:
-		return
+func can_repair_anchor() -> bool:
+	return not is_game_over and current_room_id == ANCHOR_REPAIR_ROOM_ID
+
+
+func repair_anchor(delta: float) -> bool:
+	if not can_repair_anchor():
+		return false
 	anchor_progress = minf(anchor_progress + delta, anchor_target)
 	anchor_progress_changed.emit(anchor_progress / anchor_target)
+	return true
 
 
 func repair_window(window_id: String, delta: float) -> bool:
@@ -90,8 +94,6 @@ func repair_window(window_id: String, delta: float) -> bool:
 		return false
 	_apply_window_durability_change(window_id, window, WINDOW_REPAIR_RATE * delta)
 	window_changed.emit(window_id, window["durability"], window["broken"])
-	if active_attack.get("target_id", "") == window_id:
-		_resolve_attack()
 	return true
 
 
@@ -430,15 +432,15 @@ func _update_san(delta: float) -> void:
 			break
 
 	if all_lit:
-		san += delta * 1.5
+		san += delta * 1.0
 
 	if not active_attack.is_empty() and active_attack["type"] == "window":
-		san -= delta * 1.0
+		san -= delta * 3.0
 
 	if phase == PHASE_CANDLE:
 		var unlit_count := count_unlit_candles()
 		if unlit_count > 0:
-			san -= delta * 5.0 * float(unlit_count)
+			san -= delta * 4.0 * float(unlit_count)
 
 	san = clampf(san, 0.0, san_max)
 	san_changed.emit(san, san_max)
@@ -549,7 +551,7 @@ func _apply_window_durability_change(window_id: String, window: Dictionary, delt
 		window["_durability_frac"] = 0.0
 		window["broken"] = true
 		was_broken = true
-		_enter_phase_2()
+		_enter_phase_2(window_id)
 	if was_broken and is_window_under_attack(window_id):
 		_resolve_attack()
 
@@ -564,7 +566,7 @@ func break_window(window_id: String) -> bool:
 	window["_durability_frac"] = 0.0
 	window["broken"] = true
 	window_changed.emit(window_id, 0, true)
-	_enter_phase_2()
+	_enter_phase_2(window_id)
 	if is_window_under_attack(window_id):
 		_resolve_attack()
 	return true
@@ -577,12 +579,13 @@ func _resolve_attack() -> void:
 	next_attack_timer = randf_range(ATTACK_COOLDOWN_MIN, ATTACK_COOLDOWN_MAX)
 
 
-func _enter_phase_2() -> void:
+func _enter_phase_2(broken_window_id: String = "") -> void:
 	if phase == PHASE_CANDLE:
 		return
 	phase = PHASE_CANDLE
 	san_max = 80.0
 	san = minf(san, san_max)
+	phase1_ended.emit(broken_window_id)
 	phase_changed.emit(phase)
 	san_changed.emit(san, san_max)
 

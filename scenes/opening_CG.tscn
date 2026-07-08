@@ -1,0 +1,102 @@
+[gd_scene format=3 uid="uid://djbcys73rc7ck"]
+
+[ext_resource type="Script" uid="uid://bduqpkaqsk1w2" path="res://scenes/opening_cg.gd" id="2_25lnw"]
+[ext_resource type="FontFile" uid="uid://bl2vn76h5jpvx" path="res://assets/fonts/ChangBanDianSong-12.ttf" id="2_8453i"]
+
+[node name="OpeningCg" type="Control" unique_id=1904875979]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_25lnw")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1624434534]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="ColorRect" unique_id=1580760329]
+layout_mode = 0
+offset_left = -16.0
+offset_top = 153.0
+offset_right = 1184.0
+offset_bottom = 466.0
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("2_8453i")
+theme_override_font_sizes/font_size = 24
+text = "鱼已经填满了我的货舱，我正准备起锚返航，船上的电力却忽然断了，我的起锚器也因为停电无法运作了。
+为了早点回到岸上，我只能用机械模式慢慢的             。
+不知为何，今晚的大海总让我感觉心里毛毛的，      也总传来些奇怪的声音。
+我在船上点了很多       ，这些       让我心安了些。
+希望能平安回家吧。"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="ColorRect/Label" unique_id=49929412]
+layout_mode = 0
+offset_left = 744.0
+offset_top = 49.0
+offset_right = 912.0
+offset_bottom = 147.0
+theme_override_colors/font_color = Color(0.34487036, 0.7526588, 0.15047714, 1)
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("2_8453i")
+theme_override_font_sizes/font_size = 30
+text = "收回船锚"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="ColorRect/Label" unique_id=935245965]
+layout_mode = 0
+offset_left = 451.0
+offset_top = 165.0
+offset_right = 619.0
+offset_bottom = 263.0
+theme_override_colors/font_color = Color(1, 0, 0.2627451, 1)
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("2_8453i")
+theme_override_font_sizes/font_size = 30
+text = "蜡烛"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label4" type="Label" parent="ColorRect/Label" unique_id=1756067043]
+layout_mode = 0
+offset_left = 605.0
+offset_top = 165.0
+offset_right = 773.0
+offset_bottom = 263.0
+theme_override_colors/font_color = Color(0.33456364, 0.7518456, 0, 1)
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("2_8453i")
+theme_override_font_sizes/font_size = 30
+text = "光亮"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="ColorRect/Label" unique_id=1055853215]
+layout_mode = 0
+offset_left = 628.0
+offset_top = 108.0
+offset_right = 796.0
+offset_bottom = 206.0
+theme_override_colors/font_color = Color(1, 0, 0.2627451, 1)
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("2_8453i")
+theme_override_font_sizes/font_size = 30
+text = "窗外"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TransitionColorRect" type="ColorRect" parent="." unique_id=1289053549]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)

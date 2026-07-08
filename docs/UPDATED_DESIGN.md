@@ -318,7 +318,7 @@ Main
 │   └── Monster
 │       └── black_hand
 └── CanvasLayer
-    └── HUD
+	└── HUD
 ```
 
 节点名要稳定。B 和 A 会按这些名字接逻辑和 UI。

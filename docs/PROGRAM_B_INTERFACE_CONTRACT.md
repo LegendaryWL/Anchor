@@ -191,11 +191,11 @@ C 不需要严格按某个绝对路径摆节点，但需要提供下面这些节
 ```text
 CanvasLayer
 └── UI
-    ├── HUD
-    ├── ProgressPrompt
-    ├── Minimap
-    ├── ExitDialog
-    └── GameResultScreen
+	├── HUD
+	├── ProgressPrompt
+	├── Minimap
+	├── ExitDialog
+	└── GameResultScreen
 ```
 
 B 侧组件通过导出 `NodePath` 绑定，不强制固定绝对路径。

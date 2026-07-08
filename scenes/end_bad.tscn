@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bvyl7dked25pj"]
+
+[ext_resource type="FontFile" uid="uid://bl2vn76h5jpvx" path="res://assets/fonts/ChangBanDianSong-12.ttf" id="1_t0uqj"]
+
+[node name="End2" type="Control" unique_id=1351065644]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1849348435]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="ColorRect" unique_id=719413696]
+layout_mode = 0
+offset_left = -16.0
+offset_top = 288.0
+offset_right = 1184.0
+offset_bottom = 466.0
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("1_t0uqj")
+theme_override_font_sizes/font_size = 24
+text = "我再也忍受不了，离开了船。
+海水涌入我的咽喉，这座现实的地狱，终归不是人的王国。"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="ColorRect" unique_id=1298061431]
+layout_mode = 0
+offset_left = 482.0
+offset_top = 153.0
+offset_right = 650.0
+offset_bottom = 251.0
+theme_override_colors/font_color = Color(1, 0, 0.2627451, 1)
+theme_override_constants/line_spacing = 33
+theme_override_fonts/font = ExtResource("1_t0uqj")
+theme_override_font_sizes/font_size = 65
+text = "坠海"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TransitionColorRect" type="ColorRect" parent="." unique_id=1453649608]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)

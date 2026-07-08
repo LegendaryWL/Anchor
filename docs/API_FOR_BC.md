@@ -36,6 +36,7 @@ Autoload 名：**`GameManager`**。B/C **只读状态、只调公开 API**，不
 | `window_changed` | `window_id, durability: int, is_broken: bool` | 耐久整数变化 / 破碎 | 窗 UI、特效 |
 | `candle_changed` | `candle_id, lit: bool` | 蜡烛亮灭 | 烛火模型 / 光 |
 | `phase_changed` | `phase: int` | 进入 Phase 2 | 氛围切换 |
+| `phase1_ended` | `broken_window_id: String` | 首个窗户耐久归零、进入 Phase 2 前后 | 播放破窗音效；把破窗粒子移动到对应窗户并触发 |
 | `room_changed` | `view_id: String` | 切换视角后 | **C 切相机**（参数是视角 id，不是逻辑房间名） |
 | `attack_started` | `target_id, attack_type: String` | 怪物事件开始 | 高亮 / 小地图 / 音效；`attack_type` 为 `"window"` 或 `"candle"` |
 | `attack_resolved` | `target_id, attack_type: String` | 事件被化解或超时结束 | 取消高亮、停音效 |
@@ -70,7 +71,7 @@ Autoload 名：**`GameManager`**。B/C **只读状态、只调公开 API**，不
 
 | 方法 | 说明 |
 |---|---|
-| `repair_window(window_id, delta) -> bool` | 长按修窗；+4/s 耐久；若该窗正在被袭击则化解事件 |
+| `repair_window(window_id, delta) -> bool` | 长按修窗；+4/s 耐久；若该窗正在被袭击，袭击仍持续，直到怪物计时结束或窗户破碎 |
 | `can_repair_window(window_id) -> bool` | 未碎、未满、**当前视角可交互** |
 
 修窗 UI 请用 **`get_window_durability_value(window_id)`** 或 snapshot 的 `durability_exact` 做平滑进度条（整数 `durability` 会阶梯变化）。
@@ -89,7 +90,7 @@ Autoload 名：**`GameManager`**。B/C **只读状态、只调公开 API**，不
 ```gdscript
 var target := GameManager.get_candle_under_attack_in_view()
 if target != "":
-    GameManager.expel_black_hand(target)
+	GameManager.expel_black_hand(target)
 ```
 
 若袭击目标不在当前视角，提示玩家切换房间（读 `get_active_attack_target()`）。
@@ -126,22 +127,22 @@ if target != "":
 
 ```gdscript
 {
-    "phase": int,                    # 1=PHASE_WINDOW, 2=PHASE_CANDLE
-    "san": float,
-    "san_max": float,
-    "anchor_progress": float,        # 0.0–1.0
-    "current_room_id": String,     # 逻辑房间 room_a / room_b / bow_room
-    "current_view_id": String,     # 当前相机视角
-    "game_time": float,            # 开局累计秒数
-    "attacks_enabled": bool,
-    "attack_timer": float,         # 当前袭击剩余秒数；无袭击时仍可读
-    "next_attack_timer": float,    # 距下次随机袭击
-    "unlit_candle_count": int,
-    "active_attack": Dictionary,   # {} 或 {"type":"window"|"candle", "target_id": "...", ...}
-    "black_hand": Dictionary,      # {} 或见下表
-    "is_game_over": bool,
-    "windows": { window_id: {...} },
-    "candles": { candle_id: {...} },
+	"phase": int,                    # 1=PHASE_WINDOW, 2=PHASE_CANDLE
+	"san": float,
+	"san_max": float,
+	"anchor_progress": float,        # 0.0–1.0
+	"current_room_id": String,     # 逻辑房间 room_a / room_b / bow_room
+	"current_view_id": String,     # 当前相机视角
+	"game_time": float,            # 开局累计秒数
+	"attacks_enabled": bool,
+	"attack_timer": float,         # 当前袭击剩余秒数；无袭击时仍可读
+	"next_attack_timer": float,    # 距下次随机袭击
+	"unlit_candle_count": int,
+	"active_attack": Dictionary,   # {} 或 {"type":"window"|"candle", "target_id": "...", ...}
+	"black_hand": Dictionary,      # {} 或见下表
+	"is_game_over": bool,
+	"windows": { window_id: {...} },
+	"candles": { candle_id: {...} },
 }
 ```
 
@@ -194,7 +195,8 @@ repair_window / light_candle / expel_black_hand 等交互 API 才会成功。
 ### Phase 1（`phase == 1`）
 
 - 随机袭击未碎窗户，`attack_type == "window"`
-- 袭击中该窗 `-5/s` 耐久；修窗至化解或超时
+- 袭击中该窗 `-5/s` 耐久；修窗不会化解袭击，怪物只会在本次袭击随机时间结束后停止并准备下一次袭击
+- 任一窗户耐久归零时进入 Phase 2，并发出 `phase1_ended(broken_window_id)`，`broken_window_id` 是破碎窗户实体 ID
 - 袭击中 SAN 额外 `-1/s`（与全烛 +1.5/s 可叠加）
 - `game_time > 120s` 后所有未碎窗额外 `-8/s` 被动衰减
 
@@ -215,6 +217,7 @@ GameManager.san_changed.connect(_on_san_changed)
 GameManager.anchor_progress_changed.connect(_on_anchor_changed)
 GameManager.window_changed.connect(_on_window_changed)
 GameManager.candle_changed.connect(_on_candle_changed)
+GameManager.phase1_ended.connect(_on_phase1_ended)
 GameManager.room_changed.connect(_on_room_changed)          # C 也听
 GameManager.attack_started.connect(_on_attack_started)
 GameManager.attack_resolved.connect(_on_attack_resolved)
@@ -228,11 +231,11 @@ GameManager.set_attacks_enabled(true)
 
 # 长按修窗（_process）
 if holding:
-    GameManager.repair_window(window_id, delta)
+	GameManager.repair_window(window_id, delta)
 
 # 连点驱赶黑手
 func _on_black_hand_clicked(candle_id: String) -> void:
-    GameManager.expel_black_hand(candle_id)
+	GameManager.expel_black_hand(candle_id)
 
 # 切房间按钮
 GameManager.switch_room("bow_room_0")
@@ -247,6 +250,7 @@ GameManager.switch_room("bow_room_0")
 | 节点命名 | 与实体 id 一致，如 `window_room_a_0`、`candle_room_a_1`、`anchor_device`、`black_hand` |
 | 切相机 | 听 `room_changed(view_id)`，切换到对应 `Camera3D` |
 | 窗/烛状态 | 听 `window_changed` / `candle_changed`，或轮询 `get_snapshot()` |
+| Phase 1 结束音效 / 破窗粒子 | 听 `phase1_ended(broken_window_id)`；用 `broken_window_id` 找同名 `Area3D`，把一个共用粒子移动过去播放 |
 | 被袭高亮 | 听 `attack_started` / `attack_resolved`；`target_id` 匹配节点名 |
 | 黑手模型 | `attack_type == "candle"` 时在 `target_id` 蜡烛节点旁显示 `black_hand`；`attack_resolved` 隐藏 |
 | 耐久/烛火 | 窗用 `durability_exact` 做材质/动画；烛用 `lit` 控制可见与灯光 |

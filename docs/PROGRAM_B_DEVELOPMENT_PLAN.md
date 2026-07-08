@@ -32,10 +32,10 @@
   - `add_repair_time(delta: float)`
   - `get_snapshot() -> Dictionary`
   - signals:
-    - `san_changed(current, max_san)`
-    - `repair_progress_changed(accum, target)`
-    - `phase_changed(old_phase, new_phase)`
-    - `game_over(reason)`
+	- `san_changed(current, max_san)`
+	- `repair_progress_changed(accum, target)`
+	- `phase_changed(old_phase, new_phase)`
+	- `game_over(reason)`
 - `RoomStateManager`
   - `set_current_room(room_id: String)`
   - `modify_window_durability(window_id: String, delta: float)`
@@ -44,9 +44,9 @@
   - `get_candle_state(candle_id: String)`
   - `can_fix_window(window_id: String)`
   - signals:
-    - `room_changed(room_id)`
-    - `window_durability_changed(window_id, durability)`
-    - `candle_lit_changed(candle_id, lit)`
+	- `room_changed(room_id)`
+	- `window_durability_changed(window_id, durability)`
+	- `candle_lit_changed(candle_id, lit)`
 - `EventManager`
   - `on_behavior_message(msg: BehaviorMessage)`
   - `get_window_attack_state()`

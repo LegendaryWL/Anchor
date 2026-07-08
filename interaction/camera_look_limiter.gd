@@ -3,8 +3,8 @@ extends Node3D
 
 @export var enabled := true
 @export var mouse_sensitivity := 0.08
-@export var yaw_limit_degrees := 35.0
-@export var pitch_limit_degrees := 18.0
+@export var yaw_limit_degrees := 10.0
+@export var pitch_limit_degrees := 5.0
 @export var require_captured_mouse := false
 
 var _base_rotation: Vector3
